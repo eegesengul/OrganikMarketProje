@@ -1,0 +1,21 @@
+﻿@model OrganikMarketProje.Models.Recipe
+
+<h2>@Model.Title</h2>
+
+@if (Model.ImageData != null)
+{
+        <img src="data:@Model.ImageType;base64,@Convert.ToBase64String(Model.ImageData)" width="200" />
+}
+
+<p><strong>Süre:</strong> @Model.DurationMinutes dakika</p>
+
+<h3>Malzemeler:</h3>
+<ul>
+    @foreach (var ingredient in Model.Ingredients)
+    {
+        <li>@ingredient.Product?.Name - @ingredient.Quantity</li>
+    }
+</ul>
+
+<h3>Hazırlanışı:</h3>
+<p>@Model.Instructions</p>

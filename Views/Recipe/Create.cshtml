@@ -1,0 +1,39 @@
+﻿@model OrganikMarketProje.Models.Recipe
+
+@{
+    var products = ViewBag.Products as List<OrganikMarketProje.Models.Product>;
+}
+
+<h2>Yeni Tarif Ekle</h2>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div>
+        <label>Başlık:</label>
+        <input asp-for="Title" class="form-control" />
+    </div>
+    <div>
+        <label>Hazırlama Süresi (Dakika):</label>
+        <input asp-for="DurationMinutes" type="number" class="form-control" />
+    </div>
+    <div>
+        <label>Hazırlanışı:</label>
+        <textarea asp-for="Instructions" class="form-control"></textarea>
+    </div>
+    <div>
+        <label>Tarif Resmi:</label>
+        <input type="file" name="image" />
+    </div>
+
+    <h4>Malzemeler</h4>
+    @for (int i = 0; i < products.Count; i++)
+    {
+            <div>
+                <input type="checkbox" name="SelectedProductIds" value="@products[i].Id" />
+            @products[i].Name
+
+                <input type="text" name="Quantities" placeholder="Miktar (örn: 2 adet)" />
+            </div>
+    }
+
+    <button type="submit" class="btn btn-success">Kaydet</button>
+</form>

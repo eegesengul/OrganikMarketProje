@@ -1,0 +1,19 @@
+﻿@model dynamic
+
+<h2 class="text-center mb-4">Giriş Yap</h2>
+
+<partial name="_ValidationSummary" />
+
+<form asp-action="Login" method="post">
+    <div class="mb-3">
+        <label>Email:</label>
+        <input name="email" class="form-control" type="email" required />
+    </div>
+    <div class="mb-3">
+        <label>Şifre:</label>
+        <input name="password" type="password" class="form-control" required />
+    </div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-success">Giriş Yap</button>
+    </div>
+</form>

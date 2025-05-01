@@ -1,0 +1,31 @@
+﻿@model List<OrganikMarketProje.Models.Recipe>
+
+<h2 class="text-center mb-4">Tarifler</h2>
+
+@if (User.IsInRole("Admin"))
+{
+        <div class="text-end mb-4">
+            <a asp-action="Create" class="btn btn-primary">Yeni Tarif Ekle</a>
+        </div>
+}
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var recipe in Model)
+    {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                @if (recipe.ImageData != null)
+                {
+                            <img src="data:@recipe.ImageType;base64,@Convert.ToBase64String(recipe.ImageData)" class="card-img-top" style="height: 200px; object-fit: cover;" />
+                }
+                    <div class="card-body">
+                        <h5 class="card-title">@recipe.Title</h5>
+                        <p class="card-text"><strong>Süre:</strong> @recipe.DurationMinutes dakika</p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-info btn-sm">Detay</a>
+                    </div>
+                </div>
+            </div>
+    }
+</div>
