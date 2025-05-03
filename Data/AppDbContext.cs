@@ -11,6 +11,8 @@ namespace OrganikMarketProje.Data
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<Recipe> Recipes { get; set; } = null!;
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

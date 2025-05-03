@@ -1,0 +1,31 @@
+﻿@model OrganikMarketProje.Models.Order
+
+<h2>Sipariş Detayı (#@Model.Id)</h2>
+
+<p><strong>Tarih:</strong> @Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ürün</th>
+            <th>Birim Fiyat</th>
+            <th>Adet</th>
+            <th>Toplam</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Product?.Name</td>
+                <td>@item.UnitPrice ₺</td>
+                <td>@item.Quantity</td>
+                <td>@(item.UnitPrice * item.Quantity) ₺</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p><strong>Genel Toplam:</strong> @Model.Items.Sum(i => i.UnitPrice * i.Quantity) ₺</p>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">← Siparişlerime Dön</a>

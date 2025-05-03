@@ -15,10 +15,15 @@ builder.Services.AddIdentity<AppUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-// Service registration
+// Servisler
 builder.Services.AddScoped<ProductOperations>();
 
-// MVC
+// Session için gerekli servisler
+builder.Services.AddSession();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<CartService>();
+
+// MVC servisi
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -26,7 +31,10 @@ var app = builder.Build();
 app.UseStaticFiles();
 app.UseRouting();
 
-// BURASI ÖNEMLÝ: Identity Middleware'lerini Aktif Et
+// Session middleware ekleniyor (UseRouting'den sonra)
+app.UseSession();
+
+// Identity middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -34,8 +42,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
-// BURADAN BAÞLIYOR: Rolleri veritabanýna ekle
+// Rolleri ve admin kullanýcýyý oluþtur
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -51,7 +58,6 @@ using (var scope = app.Services.CreateScope())
         }
     }
 
-    // Admin kullanýcý kontrolü ve oluþturulmasý
     string adminEmail = "admin@admin.com";
     string adminPassword = "Admin123.";
 

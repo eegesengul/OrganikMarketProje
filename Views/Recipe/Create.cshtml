@@ -27,11 +27,11 @@
     <h4>Malzemeler</h4>
     @for (int i = 0; i < products.Count; i++)
     {
-            <div>
-                <input type="checkbox" name="SelectedProductIds" value="@products[i].Id" />
+            <div class="border p-2 mb-2">
+                <input type="hidden" name="IngredientForms[@i].ProductId" value="@products[i].Id" />
+                <input type="checkbox" name="IngredientForms[@i].IsSelected" value="true" />
             @products[i].Name
-
-                <input type="text" name="Quantities" placeholder="Miktar (örn: 2 adet)" />
+                <input type="number" name="IngredientForms[@i].Quantity" placeholder="Miktar" min="0" class="ms-2" />
             </div>
     }
 

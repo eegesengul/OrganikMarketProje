@@ -29,3 +29,21 @@
             </div>
     }
 </div>
+
+@if (ViewBag.SuggestedRecipes != null && ((List<OrganikMarketProje.Models.Recipe>)ViewBag.SuggestedRecipes).Count > 0)
+{
+        <h3 class="mt-5">Sepetinizdeki ürünlerle yapılabilecek tarifler:</h3>
+        <ul>
+        @foreach (var recipe in ViewBag.SuggestedRecipes as List<OrganikMarketProje.Models.Recipe>)
+        {
+                    <li>
+                        <a asp-action="Details" asp-route-id="@recipe.Id">@recipe.Title</a>
+                    </li>
+        }
+        </ul>
+}
+else if (ViewBag.SuggestedRecipes != null)
+{
+        <p class="mt-5 text-muted">Sepetinizdeki ürünlerle eşleşen tarif bulunamadı.</p>
+}
+
