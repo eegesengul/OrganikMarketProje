@@ -1,0 +1,17 @@
+﻿@model OrganikMarketProje.Models.Order
+
+<h2>Sipariş Durumunu Güncelle (#@Model.Id)</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="form-group">
+        <label>Durum</label>
+        <select name="status" class="form-control">
+            <option value="Hazırlanıyor" selected="@("Hazırlanıyor" == Model.Status)">Hazırlanıyor</option>
+            <option value="Kargoda" selected="@("Kargoda" == Model.Status)">Kargoda</option>
+            <option value="Teslim Edildi" selected="@("Teslim Edildi" == Model.Status)">Teslim Edildi</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success mt-3">Güncelle</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Geri</a>
+</form>

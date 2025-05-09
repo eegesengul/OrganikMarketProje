@@ -1,0 +1,44 @@
+﻿@model List<OrganikMarketProje.Models.Order>
+
+<h2>Tüm Siparişler (Admin)</h2>
+
+@if (TempData["AdminOrderMessage"] != null)
+{
+        <div class="alert alert-success">@TempData["AdminOrderMessage"]</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Kullanıcı</th>
+            <th>Tarih</th>
+            <th>Durum</th>
+            <th>Detay</th>
+            <th>Durum Güncelle</th>
+            <th>Sil</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.UserName</td>
+                    <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@order.Status</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-info btn-sm">Detay</a>
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@order.Id" class="btn btn-warning btn-sm">Durumu Değiştir</a>
+                    </td>
+                    <td>
+                        <form asp-action="Delete" asp-route-id="@order.Id" method="post" onsubmit="return confirm('Bu siparişi silmek istediğinizden emin misiniz?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                        </form>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>

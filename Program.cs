@@ -3,6 +3,7 @@ using OrganikMarketProje.Data;
 using OrganikMarketProje.Services;
 using OrganikMarketProje.Models;
 using Microsoft.AspNetCore.Identity;
+using OrganikMarketProje.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,31 +11,43 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Identity kayýt
-builder.Services.AddIdentity<AppUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+// Identity ayarlarý ve özelleþtirilmiþ hata mesajlarý
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
+    // Þifre gereksinimleri
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = true; // özel karakter
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+
+    // Kullanýcý adý gereksinimleri
+    options.User.RequireUniqueEmail = true;
+
+    // Kilitleme ayarlarý (isteðe baðlý)
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders()
+.AddErrorDescriber<CustomIdentityErrorDescriber>();
 
 // Servisler
 builder.Services.AddScoped<ProductOperations>();
-
-// Session için gerekli servisler
-builder.Services.AddSession();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<CartService>();
+builder.Services.AddSession();
 
-// MVC servisi
-builder.Services.AddControllersWithViews();
+// MVC + DataAnnotationsLocalization
+builder.Services.AddControllersWithViews()
+    .AddDataAnnotationsLocalization();
 
 var app = builder.Build();
 
 app.UseStaticFiles();
 app.UseRouting();
-
-// Session middleware ekleniyor (UseRouting'den sonra)
 app.UseSession();
-
-// Identity middleware
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -66,7 +79,9 @@ using (var scope = app.Services.CreateScope())
         var adminUser = new AppUser
         {
             UserName = adminEmail,
-            Email = adminEmail
+            Email = adminEmail,
+            Name = "Admin",
+            Surname = "User"
         };
 
         var result = await userManager.CreateAsync(adminUser, adminPassword);

@@ -5,10 +5,10 @@ namespace OrganikMarketProje.Models
 {
     public class AppUser : IdentityUser
     {
-        [Required]
+        [Required(ErrorMessage = "İsim alanı zorunludur.")]
         public string Name { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "Soyisim alanı zorunludur.")]
         public string Surname { get; set; } = string.Empty;
     }
 }

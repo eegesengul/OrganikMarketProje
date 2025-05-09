@@ -2,11 +2,11 @@
 
 <h2>Sipariş Detayı (#@Model.Id)</h2>
 
+<p><strong>Kullanıcı:</strong> @Model.UserName</p>
 <p><strong>Tarih:</strong> @Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
 <p><strong>Durum:</strong> @Model.Status</p>
 <p><strong>Adres:</strong> @Model.DeliveryAddress</p>
 <p><strong>Telefon:</strong> @Model.PhoneNumber</p>
-
 @if (!string.IsNullOrEmpty(Model.Note))
 {
         <p><strong>Not:</strong> @Model.Note</p>
@@ -36,4 +36,4 @@
 
 <p><strong>Genel Toplam:</strong> @Model.OrderItems.Sum(i => i.UnitPrice * i.Quantity) ₺</p>
 
-<a asp-action="Index" class="btn btn-secondary mt-3">← Siparişlerime Dön</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">← Geri Dön</a>
