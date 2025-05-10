@@ -1,0 +1,31 @@
+﻿@model OrganikMarketProje.Models.Admin.AdminReportViewModel
+
+<h2>Admin Raporları</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="alert alert-info">Toplam Kullanıcı Sayısı: <strong>@Model.TotalUsers</strong></div>
+    </div>
+    <div class="col-md-4">
+        <div class="alert alert-success">Toplam Sipariş Sayısı: <strong>@Model.TotalOrders</strong></div>
+    </div>
+</div>
+
+<h3>En Çok Sipariş Edilen Ürünler</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ürün</th>
+            <th>Toplam Adet</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TopProducts)
+        {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.TotalQuantity</td>
+                </tr>
+        }
+    </tbody>
+</table>

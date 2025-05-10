@@ -1,0 +1,76 @@
+﻿@model OrganikMarketProje.Models.Admin.AdminDateRangeReportViewModel
+
+@{
+    ViewData["Title"] = "Tarih Aralığına Göre Rapor";
+}
+
+<h2>Tarih Aralığına Göre Rapor</h2>
+
+<form asp-action="DateRangeReport" method="post" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label for="startDate" class="form-label">Başlangıç Tarihi</label>
+        <input type="date" class="form-control" id="startDate" name="startDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required />
+    </div>
+    <div class="col-md-4">
+        <label for="endDate" class="form-label">Bitiş Tarihi</label>
+        <input type="date" class="form-control" id="endDate" name="endDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required />
+    </div>
+    <div class="col-md-4 align-self-end">
+        <button type="submit" class="btn btn-primary">Raporu Getir</button>
+    </div>
+</form>
+
+@if (Model.TotalOrders > 0)
+{
+        <div class="alert alert-success">
+            <strong>@Model.TotalOrders</strong> sipariş bulundu, toplam ciro: <strong>@Model.TotalRevenue ₺</strong>
+        </div>
+
+        <h4>En Çok Sipariş Edilen Ürünler</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ürün</th>
+                    <th>Toplam Adet</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.TopProducts)
+            {
+                    <tr>
+                        <td>@item.ProductName</td>
+                        <td>@item.TotalQuantity</td>
+                    </tr>
+            }
+            </tbody>
+        </table>
+
+        <h4 class="mt-4">Tarih Aralığındaki Siparişler</h4>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Sipariş ID</th>
+                    <th>Kullanıcı</th>
+                    <th>Tarih</th>
+                    <th>Toplam Tutar</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var order in Model.Orders)
+            {
+                    <tr>
+                        <td>@order.OrderId</td>
+                        <td>@order.UserName</td>
+                        <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@order.TotalAmount ₺</td>
+                    </tr>
+            }
+            </tbody>
+        </table>
+}
+else if (Model.StartDate != DateTime.MinValue && Model.EndDate != DateTime.MinValue)
+{
+        <div class="alert alert-info">
+            Bu tarih aralığında sipariş bulunamadı.
+        </div>
+}

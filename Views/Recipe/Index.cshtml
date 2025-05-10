@@ -2,6 +2,11 @@
 
 <h2 class="text-center mb-4">Tarifler</h2>
 
+@if (TempData["RecipeMessage"] != null)
+{
+        <div class="alert alert-success">@TempData["RecipeMessage"]</div>
+}
+
 @if (User.IsInRole("Admin"))
 {
         <div class="text-end mb-4">
@@ -22,8 +27,16 @@
                         <h5 class="card-title">@recipe.Title</h5>
                         <p class="card-text"><strong>Süre:</strong> @recipe.DurationMinutes dakika</p>
                     </div>
-                    <div class="card-footer text-center">
+                    <div class="card-footer d-flex flex-column gap-2">
                         <a asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-info btn-sm">Detay</a>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                                <div class="d-flex justify-content-between">
+                                    <a asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-warning btn-sm">Düzenle</a>
+                                    <a asp-action="Delete" asp-route-id="@recipe.Id" class="btn btn-danger btn-sm" onclick="return confirm('Bu tarifi silmek istediğinize emin misiniz?')">Sil</a>
+                                </div>
+                    }
                     </div>
                 </div>
             </div>
@@ -46,4 +59,3 @@ else if (ViewBag.SuggestedRecipes != null)
 {
         <p class="mt-5 text-muted">Sepetinizdeki ürünlerle eşleşen tarif bulunamadı.</p>
 }
-

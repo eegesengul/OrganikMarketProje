@@ -1,0 +1,75 @@
+﻿@model OrganikMarketProje.Models.Recipe
+
+<h2>Tarifi Düzenle</h2>
+
+<partial name="_ValidationSummary" />
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Instructions"></label>
+        <textarea asp-for="Instructions" class="form-control"></textarea>
+        <span asp-validation-for="Instructions" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DurationMinutes"></label>
+        <input asp-for="DurationMinutes" type="number" class="form-control" />
+        <span asp-validation-for="DurationMinutes" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Mevcut Resim:</label><br />
+        @if (Model.ImageData != null)
+        {
+                <img src="data:@Model.ImageType;base64,@Convert.ToBase64String(Model.ImageData)" style="width: 200px; height: auto;" />
+        }
+    </div>
+
+    <div class="mb-3">
+        <label>Yeni Resim Yükle (isteğe bağlı):</label>
+        <input type="file" name="image" class="form-control" />
+    </div>
+
+    <h4>Malzemeler</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Seç</th>
+                <th>Ürün</th>
+                <th>Miktar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewBag.Products != null)
+            {
+                var products = ViewBag.Products as List<OrganikMarketProje.Models.Product>;
+                for (int i = 0; i < products.Count; i++)
+                {
+                    var product = products[i];
+                    var existingIngredient = Model.Ingredients?.FirstOrDefault(x => x.ProductId == product.Id);
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="IngredientForms[@i].IsSelected" value="true" @(existingIngredient != null ? "checked" : "") />
+                                    <input type="hidden" name="IngredientForms[@i].ProductId" value="@product.Id" />
+                                </td>
+                                <td>@product.Name</td>
+                                <td>
+                                    <input type="number" name="IngredientForms[@i].Quantity" value="@(existingIngredient != null ? existingIngredient.Quantity : 0)" min="0" class="form-control form-control-sm" style="width: 80px;" />
+                                </td>
+                            </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-success">Kaydet</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>
