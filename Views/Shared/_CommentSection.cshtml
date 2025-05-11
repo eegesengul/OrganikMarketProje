@@ -1,0 +1,72 @@
+﻿@model List<OrganikMarketProje.Models.Comment>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+
+@{
+    var relatedId = ViewBag.ProductId ?? ViewBag.RecipeId;
+    var targetType = ViewBag.ProductId != null ? "Product" : "Recipe";
+    var commentError = TempData["CommentError"] as string;
+    var currentUserId = UserManager.GetUserId(User);
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<h4>💬 Yorumlar</h4>
+
+@if (Model.Any())
+{
+        <ul class="list-group mb-3">
+        @foreach (var c in Model.OrderByDescending(c => c.CreatedAt))
+        {
+                    <li class="list-group-item">
+                        <strong>@c.User?.UserName</strong> - ⭐ @c.Rating <br />
+                @Html.Raw(Html.Encode(c.Text))<br />
+                        <small class="text-muted">@c.CreatedAt.ToString("g")</small>
+
+                @if (User.Identity.IsAuthenticated && (c.UserId == currentUserId || isAdmin))
+                {
+                                <div class="mt-2 d-flex gap-2">
+                        @if (c.UserId == currentUserId)
+                        {
+                                            <a asp-controller="Comment" asp-action="Edit" asp-route-id="@c.Id" class="btn btn-sm btn-secondary">Düzenle</a>
+                        }
+
+                                    <form method="post" asp-controller="Comment" asp-action="@(isAdmin && c.UserId != currentUserId ? "DeleteByAdmin" : "Delete")" asp-route-id="@c.Id"
+                                          onsubmit="return confirm('Yorumu silmek istediğinize emin misiniz?');">
+                                        <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+                                    </form>
+                                </div>
+                }
+                    </li>
+        }
+        </ul>
+}
+else
+{
+        <p>Henüz yorum yok.</p>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+        <form method="post" asp-controller="Comment" asp-action="Add">
+            <input type="hidden" name="@($"{targetType}Id")" value="@relatedId" />
+
+        @if (!string.IsNullOrEmpty(commentError))
+        {
+                    <div class="alert alert-danger">@commentError</div>
+        }
+
+            <div class="mb-2">
+                <label for="Text">Yorum:</label>
+                <textarea name="Text" class="form-control" required></textarea>
+            </div>
+            <div class="mb-2">
+                <label for="Rating">Puan (1-5):</label>
+                <input type="number" name="Rating" min="1" max="5" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Gönder</button>
+        </form>
+}
+else
+{
+        <p><em>Yorum yapabilmek için <a asp-controller="Account" asp-action="Login">giriş yapın</a>.</em></p>
+}

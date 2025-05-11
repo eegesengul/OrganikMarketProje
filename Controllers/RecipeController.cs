@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using OrganikMarketProje.Models;
-using OrganikMarketProje.Data;
-using OrganikMarketProje.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
-using System.Linq;
+using OrganikMarketProje.Data;
+using OrganikMarketProje.Models;
+using OrganikMarketProje.Services;
 
 namespace OrganikMarketProje.Controllers
 {
@@ -12,11 +12,13 @@ namespace OrganikMarketProje.Controllers
     {
         private readonly AppDbContext _context;
         private readonly CartService _cartService;
+        private readonly UserManager<AppUser> _userManager;
 
-        public RecipeController(AppDbContext context, CartService cartService)
+        public RecipeController(AppDbContext context, CartService cartService, UserManager<AppUser> userManager)
         {
             _context = context;
             _cartService = cartService;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -34,9 +36,40 @@ namespace OrganikMarketProje.Controllers
                 .ToList();
 
             ViewBag.SuggestedRecipes = matchingRecipes;
-
             return View(recipes);
         }
+
+        public IActionResult Details(int id)
+        {
+            var recipe = _context.Recipes
+                .Include(r => r.Ingredients!)
+                .ThenInclude(ri => ri.Product)
+                .FirstOrDefault(r => r.Id == id);
+
+            if (recipe == null)
+                return NotFound();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = _userManager.GetUserId(User);
+                ViewBag.IsFavorite = _context.FavoriteRecipes.Any(f => f.RecipeId == id && f.UserId == userId);
+            }
+
+            var comments = _context.Comments
+                .Include(c => c.User)
+                .Where(c => c.RecipeId == id)
+                .OrderByDescending(c => c.CreatedAt)
+                .ToList();
+
+            ViewBag.RecipeComments = comments;
+            ViewBag.AverageRating = comments.Any() ? comments.Average(c => c.Rating) : 0;
+
+            // 🔧 Eksik olan bu satırı ekle
+            ViewBag.RecipeId = id;
+
+            return View(recipe);
+        }
+
 
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
@@ -57,21 +90,15 @@ namespace OrganikMarketProje.Controllers
                 recipe.ImageType = image.ContentType;
             }
 
-            recipe.Ingredients = new List<RecipeIngredient>();
-
-            foreach (var item in IngredientForms)
-            {
-                if (item.IsSelected && item.Quantity > 0)
+            recipe.Ingredients = IngredientForms
+                .Where(i => i.IsSelected && i.Quantity > 0)
+                .Select(i => new RecipeIngredient
                 {
-                    recipe.Ingredients.Add(new RecipeIngredient
-                    {
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity
-                    });
-                }
-            }
+                    ProductId = i.ProductId,
+                    Quantity = i.Quantity
+                }).ToList();
 
-            if (recipe.Ingredients.Count == 0)
+            if (!recipe.Ingredients.Any())
             {
                 ModelState.AddModelError("", "En az bir malzeme seçmelisiniz.");
                 ViewBag.Products = _context.Products.ToList();
@@ -81,21 +108,6 @@ namespace OrganikMarketProje.Controllers
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
-        }
-
-        public IActionResult Details(int id)
-        {
-            var recipe = _context.Recipes
-                .Include(r => r.Ingredients!)
-                .ThenInclude(ri => ri.Product)
-                .FirstOrDefault(r => r.Id == id);
-
-            if (recipe == null)
-            {
-                return NotFound();
-            }
-
-            return View(recipe);
         }
 
         [Authorize(Roles = "Admin")]
@@ -135,28 +147,16 @@ namespace OrganikMarketProje.Controllers
                 recipe.ImageType = image.ContentType;
             }
 
-            var existingIngredients = _context.RecipeIngredients.Where(ri => ri.RecipeId == recipe.Id);
-            _context.RecipeIngredients.RemoveRange(existingIngredients);
-            await _context.SaveChangesAsync();
+            _context.RecipeIngredients.RemoveRange(recipe.Ingredients);
 
-            var newIngredients = new List<RecipeIngredient>();
-            foreach (var item in IngredientForms)
-            {
-                if (item.IsSelected && item.Quantity > 0)
+            recipe.Ingredients = IngredientForms
+                .Where(i => i.IsSelected && i.Quantity > 0)
+                .Select(i => new RecipeIngredient
                 {
-                    newIngredients.Add(new RecipeIngredient
-                    {
-                        RecipeId = recipe.Id,
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity
-                    });
-                }
-            }
-
-            if (newIngredients.Count > 0)
-            {
-                await _context.RecipeIngredients.AddRangeAsync(newIngredients);
-            }
+                    ProductId = i.ProductId,
+                    RecipeId = recipe.Id,
+                    Quantity = i.Quantity
+                }).ToList();
 
             await _context.SaveChangesAsync();
 
@@ -177,11 +177,7 @@ namespace OrganikMarketProje.Controllers
                 return RedirectToAction("Index");
             }
 
-            if (recipe.Ingredients != null)
-            {
-                _context.RecipeIngredients.RemoveRange(recipe.Ingredients);
-            }
-
+            _context.RecipeIngredients.RemoveRange(recipe.Ingredients);
             _context.Recipes.Remove(recipe);
             _context.SaveChanges();
 

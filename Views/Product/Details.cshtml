@@ -1,0 +1,66 @@
+﻿@model OrganikMarketProje.Models.Product
+
+@{
+    ViewData["Title"] = "Ürün Detayı";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Name</h2>
+
+@if (Model.ImageData != null)
+{
+        <img src="data:@Model.ImageType;base64,@Convert.ToBase64String(Model.ImageData)" width="300" class="mb-3" />
+}
+
+<p><strong>Açıklama:</strong> @Model.Description</p>
+<p><strong>Fiyat:</strong> @Model.Price ₺</p>
+<p><strong>Stok:</strong> @Model.StockQuantity adet</p>
+<p><strong>Kategori:</strong> @Model.Category</p>
+<p><strong>Teslimat:</strong> @Model.DeliveryInfo</p>
+
+@if (ViewBag.AverageRating > 0)
+{
+        <p><strong>Ortalama Puan:</strong> ⭐ @string.Format("{0:0.0}", ViewBag.AverageRating) / 5</p>
+}
+else
+{
+        <p><em>Henüz puanlanmamış.</em></p>
+}
+
+<hr />
+
+<!-- Sepete Ekle -->
+@if (Model.StockQuantity > 0)
+{
+        <form asp-controller="Cart" asp-action="Add" method="post" class="d-flex align-items-center mb-3">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <input type="number" name="quantity" value="1" min="1" class="form-control me-2" style="width: 80px;" />
+            <button type="submit" class="btn btn-success">Sepete Ekle</button>
+        </form>
+}
+else
+{
+        <div class="alert alert-danger">Bu ürün şu anda stokta yok.</div>
+}
+
+<!-- Favorilere Ekle/Kaldır -->
+@if (User.Identity.IsAuthenticated)
+{
+        <form method="post" asp-controller="Favorite" asp-action="ToggleProduct">
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <button type="submit" class="btn btn-outline-danger">
+            @(ViewBag.IsFavorite != null && ViewBag.IsFavorite
+                    ? "❤️ Favorilerden Kaldır"
+                    : "❤️ Favorilere Ekle")
+            </button>
+        </form>
+}
+else
+{
+        <p><em>Favorilere eklemek için <a asp-controller="Account" asp-action="Login">giriş yapın</a>.</em></p>
+}
+
+<hr />
+
+<!-- Yorumlar -->
+@await Html.PartialAsync("_CommentSection", ViewBag.ProductComments as List<OrganikMarketProje.Models.Comment>)

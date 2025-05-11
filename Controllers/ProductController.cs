@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using OrganikMarketProje.Data;
 using OrganikMarketProje.Models;
 using OrganikMarketProje.Services;
 
@@ -8,10 +11,14 @@ namespace OrganikMarketProje.Controllers
     public class ProductController : Controller
     {
         private readonly ProductOperations _productOps;
+        private readonly AppDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public ProductController(ProductOperations productOps)
+        public ProductController(ProductOperations productOps, AppDbContext context, UserManager<AppUser> userManager)
         {
             _productOps = productOps;
+            _context = context;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -19,6 +26,35 @@ namespace OrganikMarketProje.Controllers
             var products = _productOps.GetAll();
             return View(products);
         }
+
+        public IActionResult Details(int id)
+        {
+            var product = _productOps.GetById(id);
+            if (product == null)
+                return NotFound();
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = _userManager.GetUserId(User);
+                var isFav = _context.FavoriteProducts.Any(f => f.ProductId == id && f.UserId == userId);
+                ViewBag.IsFavorite = isFav;
+            }
+
+            var comments = _context.Comments
+                .Include(c => c.User)
+                .Where(c => c.ProductId == id)
+                .OrderByDescending(c => c.CreatedAt)
+                .ToList();
+
+            ViewBag.ProductComments = comments;
+            ViewBag.AverageRating = comments.Any() ? comments.Average(c => c.Rating) : 0;
+
+            // 🔧 Eksik olan bu satırı ekle
+            ViewBag.ProductId = id;
+
+            return View(product);
+        }
+
 
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
@@ -39,7 +75,7 @@ namespace OrganikMarketProje.Controllers
             }
 
             _productOps.Add(product);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin")]
@@ -47,9 +83,8 @@ namespace OrganikMarketProje.Controllers
         {
             var product = _productOps.GetById(id);
             if (product == null)
-            {
                 return NotFound();
-            }
+
             return View(product);
         }
 
@@ -59,16 +94,14 @@ namespace OrganikMarketProje.Controllers
         {
             var product = _productOps.GetById(id);
             if (product == null)
-            {
                 return NotFound();
-            }
 
             product.Name = updatedProduct.Name;
             product.Description = updatedProduct.Description;
             product.Price = updatedProduct.Price;
             product.Category = updatedProduct.Category;
             product.DeliveryInfo = updatedProduct.DeliveryInfo;
-            product.StockQuantity = updatedProduct.StockQuantity; // DÜZELTİLDİ
+            product.StockQuantity = updatedProduct.StockQuantity;
 
             if (image != null)
             {
@@ -79,14 +112,14 @@ namespace OrganikMarketProje.Controllers
             }
 
             _productOps.Update(product);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             _productOps.Delete(id);
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

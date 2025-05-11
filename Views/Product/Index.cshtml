@@ -28,6 +28,7 @@
                             <img src="data:@item.ImageType;base64,@Convert.ToBase64String(item.ImageData)"
                                  class="card-img-top" style="height: 200px; object-fit: cover;" />
                 }
+
                     <div class="card-body">
                         <h5 class="card-title">@item.Name</h5>
                         <p class="card-text">@item.Description</p>
@@ -46,9 +47,12 @@
                                 </div>
                     }
 
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info mt-2">Detay</a>
+
                         <form asp-controller="Cart" asp-action="Add" method="post" class="d-flex align-items-center mt-2">
                             <input type="hidden" name="productId" value="@item.Id" />
-                            <input type="number" name="quantity" value="1" min="1" class="form-control form-control-sm me-2" style="width: 70px;" />
+                            <input type="number" name="quantity" value="1" min="1"
+                                   class="form-control form-control-sm me-2" style="width: 70px;" />
                             <button type="submit" class="btn btn-success btn-sm">Sepete Ekle</button>
                         </form>
                     </div>

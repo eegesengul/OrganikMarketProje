@@ -1,0 +1,38 @@
+﻿@model OrganikMarketProje.Models.Comment
+
+@{
+    ViewData["Title"] = "Yorumu Düzenle";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">📝 Yorumu Düzenle</h2>
+
+<form asp-action="Edit" method="post">
+    @* Gerekli gizli alanlar *@
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ProductId" />
+    <input type="hidden" asp-for="RecipeId" />
+
+    <div class="mb-3">
+        <label asp-for="Text" class="form-label">Yorum</label>
+        <textarea asp-for="Text" class="form-control" rows="4" required></textarea>
+        <span asp-validation-for="Text" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Rating" class="form-label">Puan (1-5)</label>
+        <input asp-for="Rating" type="number" min="1" max="5" class="form-control" required />
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Kaydet</button>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">İptal</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

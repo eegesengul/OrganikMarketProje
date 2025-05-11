@@ -1,0 +1,53 @@
+﻿@model List<OrganikMarketProje.Models.Comment>
+@{
+    ViewData["Title"] = "Yorumlar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">🗂️ Tüm Yorumlar</h2>
+
+@if (!Model.Any())
+{
+        <div class="alert alert-info">Henüz yorum yapılmamış.</div>
+}
+else
+{
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Kullanıcı</th>
+                    <th>İçerik</th>
+                    <th>Puan</th>
+                    <th>Tarih</th>
+                    <th>Bağlantı</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var comment in Model)
+            {
+                    <tr>
+                        <td>@comment.User?.UserName</td>
+                        <td>@Html.Raw(Html.Encode(comment.Text))</td>
+                        <td>⭐ @comment.Rating</td>
+                        <td>@comment.CreatedAt.ToString("g")</td>
+                        <td>
+                        @if (comment.Product != null)
+                        {
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@comment.ProductId">Ürün: @comment.Product.Name</a>
+                        }
+                        else if (comment.Recipe != null)
+                        {
+                                    <a asp-controller="Recipe" asp-action="Details" asp-route-id="@comment.RecipeId">Tarif: @comment.Recipe.Title</a>
+                        }
+                        </td>
+                        <td>
+                            <form asp-controller="Comment" asp-action="DeleteByAdmin" method="post" asp-route-id="@comment.Id" onsubmit="return confirm('Bu yorumu silmek istediğinize emin misiniz?');">
+                                <button type="submit" class="btn btn-sm btn-danger">Sil</button>
+                            </form>
+                        </td>
+                    </tr>
+            }
+            </tbody>
+        </table>
+}

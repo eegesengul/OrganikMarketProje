@@ -31,6 +31,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Order" asp-action="Index">Siparişlerim</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Favorite" asp-action="MyFavorites">Favorilerim</a>
+                                </li>
+                        }
                     </ul>
 
                     <ul class="navbar-nav">
@@ -51,6 +57,12 @@
                                                 </li>
                                                 <li>
                                                     <a class="dropdown-item" asp-controller="AdminReport" asp-action="DateRangeReport">Tarih Aralığı Raporu</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="AdminUser" asp-action="UserList">Kullanıcı Yönetimi</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" asp-controller="Comment" asp-action="Index">Yorum Yönetimi</a>
                                                 </li>
                                             </ul>
                                         </li>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OrganikMarketProje.Data;
+using OrganikMarketProje.Models;
 using OrganikMarketProje.Models.Admin;
 
 namespace OrganikMarketProje.Controllers

@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Favorilerim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var favProducts = (List<OrganikMarketProje.Models.FavoriteProduct>)ViewBag.FavProducts;
+    var favRecipes = (List<OrganikMarketProje.Models.FavoriteRecipe>)ViewBag.FavRecipes;
+}
+
+<h2>❤️ Favori Ürünler</h2>
+@if (favProducts.Any())
+{
+        <ul class="list-group mb-4">
+        @foreach (var item in favProducts)
+        {
+                    <li class="list-group-item">
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">
+                    @item.Product?.Name
+                        </a>
+                    </li>
+        }
+        </ul>
+}
+else
+{
+        <p>Favori ürününüz yok.</p>
+}
+
+<h2>⭐ Favori Tarifler</h2>
+@if (favRecipes.Any())
+{
+        <ul class="list-group">
+        @foreach (var item in favRecipes)
+        {
+                    <li class="list-group-item">
+                        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@item.RecipeId">
+                    @item.Recipe?.Title
+                        </a>
+                    </li>
+        }
+        </ul>
+}
+else
+{
+        <p>Favori tarifiniz yok.</p>
+}
