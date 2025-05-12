@@ -2,7 +2,6 @@
 using OrganikMarketProje.Models;
 using OrganikMarketProje.Services;
 using OrganikMarketProje.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace OrganikMarketProje.Controllers
 {
@@ -64,6 +63,29 @@ namespace OrganikMarketProje.Controllers
         {
             _cartService.ClearCart();
             TempData["CartMessage"] = "Sepet temizlendi.";
+            return RedirectToAction("Index");
+        }
+
+        // ✅ Yeni: Sepette Adet Güncelleme
+        [HttpPost]
+        public IActionResult Update(int productId, int quantity)
+        {
+            var product = _context.Products.Find(productId);
+
+            if (product == null)
+            {
+                TempData["CartError"] = "Ürün bulunamadı.";
+                return RedirectToAction("Index");
+            }
+
+            if (quantity > product.StockQuantity)
+            {
+                TempData["CartError"] = $"Stok yetersiz. Mevcut stok: {product.StockQuantity} adet.";
+                return RedirectToAction("Index");
+            }
+
+            _cartService.UpdateQuantity(productId, quantity);
+            TempData["CartMessage"] = "Sepet güncellendi.";
             return RedirectToAction("Index");
         }
     }

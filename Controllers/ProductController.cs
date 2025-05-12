@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using OrganikMarketProje.Data;
 using OrganikMarketProje.Models;
 using OrganikMarketProje.Services;
+using System.Linq;
 
 namespace OrganikMarketProje.Controllers
 {
@@ -23,6 +24,8 @@ namespace OrganikMarketProje.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.ShowProductSearch = true;
+
             var products = _productOps.GetAll();
             return View(products);
         }
@@ -48,13 +51,28 @@ namespace OrganikMarketProje.Controllers
 
             ViewBag.ProductComments = comments;
             ViewBag.AverageRating = comments.Any() ? comments.Average(c => c.Rating) : 0;
-
-            // 🔧 Eksik olan bu satırı ekle
             ViewBag.ProductId = id;
 
             return View(product);
         }
 
+        [HttpGet]
+        public IActionResult Search(string query)
+        {
+            ViewBag.ShowProductSearch = true;
+            ViewBag.SearchQuery = query;
+
+            var results = _context.Products
+                .Where(p => p.Name.Contains(query) || p.Description.Contains(query))
+                .ToList();
+
+            if (!results.Any())
+            {
+                TempData["ProductSearchInfo"] = "Aradığınız kriterlere uygun ürün bulunamadı.";
+            }
+
+            return View("Index", results); // mevcut ürün listeleme görünümünü kullan
+        }
 
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
@@ -123,3 +141,4 @@ namespace OrganikMarketProje.Controllers
         }
     }
 }
+    

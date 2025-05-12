@@ -1,0 +1,42 @@
+﻿@model OrganikMarketProje.Models.EditUserViewModel
+
+<h2 class="text-center mb-4">Kullanıcı Düzenle</h2>
+
+<partial name="_ValidationSummary" />
+
+<form asp-action="EditUser" method="post">
+    <!-- Gizli alan olarak UserId ekliyoruz -->
+    <input type="hidden" asp-for="UserId" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">İsim</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Surname" class="form-label">Soyisim</label>
+        <input asp-for="Surname" class="form-control" />
+        <span asp-validation-for="Surname" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PhoneNumber" class="form-label">Telefon Numarası</label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">E-posta</label>
+        <input asp-for="Email" class="form-control" type="email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+    </div>
+</form>
+
+@section Scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+}

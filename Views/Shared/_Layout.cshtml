@@ -39,9 +39,28 @@
                         }
                     </ul>
 
+                    <!-- Arama Kutusu Sadece İlgili Sayfalarda -->
+                    @if (ViewBag.ShowProductSearch == true)
+                    {
+                            <form class="d-flex me-3" asp-controller="Product" asp-action="Search" method="get">
+                                <input class="form-control me-2" type="search" name="query" placeholder="Ürün ara..." />
+                                <button class="btn btn-outline-success" type="submit">Ara</button>
+                            </form>
+                    }
+                    else if (ViewBag.ShowRecipeSearch == true)
+                    {
+                            <form class="d-flex me-3" asp-controller="Recipe" asp-action="Search" method="get">
+                                <input class="form-control me-2" type="search" name="query" placeholder="Tarif ara..." />
+                                <button class="btn btn-outline-primary" type="submit">Ara</button>
+                            </form>
+                    }
+
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="MyProfile">Profilim</a>
+                                </li>
                             @if (User.IsInRole("Admin"))
                             {
                                         <li class="nav-item dropdown">
@@ -49,25 +68,14 @@
                                                 Admin Paneli
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" asp-controller="AdminOrder" asp-action="Index">Sipariş Yönetimi</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" asp-controller="AdminReport" asp-action="Index">Raporlar</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" asp-controller="AdminReport" asp-action="DateRangeReport">Tarih Aralığı Raporu</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" asp-controller="AdminUser" asp-action="UserList">Kullanıcı Yönetimi</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" asp-controller="Comment" asp-action="Index">Yorum Yönetimi</a>
-                                                </li>
+                                                <li><a class="dropdown-item" asp-controller="AdminOrder" asp-action="Index">Sipariş Yönetimi</a></li>
+                                                <li><a class="dropdown-item" asp-controller="AdminReport" asp-action="Index">Raporlar</a></li>
+                                                <li><a class="dropdown-item" asp-controller="AdminReport" asp-action="DateRangeReport">Tarih Aralığı Raporu</a></li>
+                                                <li><a class="dropdown-item" asp-controller="AdminUser" asp-action="UserList">Kullanıcı Yönetimi</a></li>
+                                                <li><a class="dropdown-item" asp-controller="Comment" asp-action="Index">Yorum Yönetimi</a></li>
                                             </ul>
                                         </li>
                             }
-
                                 <li class="nav-item">
                                     <span class="nav-link text-success">@User.Identity.Name</span>
                                 </li>

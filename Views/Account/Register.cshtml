@@ -1,42 +1,42 @@
-﻿@model OrganikMarketProje.Models.RegisterViewModel
+﻿    @model OrganikMarketProje.Models.RegisterViewModel
 
-<h2 class="text-center mb-4">Kayıt Ol</h2>
+    <h2 class="text-center mb-4">Kayıt Ol</h2>
 
-<partial name="_ValidationSummary" />
+    <partial name="_ValidationSummary" />
 
-<form asp-action="Register" method="post">
-    <div class="mb-3">
-        <label asp-for="Name">İsim</label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Surname">Soyisim</label>
-        <input asp-for="Surname" class="form-control" />
-        <span asp-validation-for="Surname" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="PhoneNumber">Telefon Numarası</label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Email">E-posta</label>
-        <input asp-for="Email" class="form-control" type="email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Password">Şifre</label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary">Kayıt Ol</button>
-    </div>
-</form>
+    <form asp-action="Register" method="post">
+        <div class="mb-3">
+            <label asp-for="Name">İsim</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Surname">Soyisim</label>
+            <input asp-for="Surname" class="form-control" />
+            <span asp-validation-for="Surname" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="PhoneNumber">Telefon Numarası</label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Email">E-posta</label>
+            <input asp-for="Email" class="form-control" type="email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Password">Şifre</label>
+            <input asp-for="Password" type="password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Kayıt Ol</button>
+        </div>
+    </form>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
     }
-}

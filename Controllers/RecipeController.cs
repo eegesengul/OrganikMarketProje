@@ -21,12 +21,36 @@ namespace OrganikMarketProje.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index()
+        // 🔍 Arama yönlendirmesi
+        [HttpGet]
+        public IActionResult Search(string query)
         {
+            return RedirectToAction("Index", new { query });
+        }
+
+        public IActionResult Index(string? query)
+        {
+            ViewBag.ShowRecipeSearch = true;
+
             var recipes = _context.Recipes
                 .Include(r => r.Ingredients!)
-                .ThenInclude(ri => ri.Product)
+                    .ThenInclude(ri => ri.Product)
                 .ToList();
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                query = query.ToLower();
+                recipes = recipes
+                    .Where(r =>
+                        r.Title.ToLower().Contains(query) ||
+                        r.Instructions.ToLower().Contains(query)
+                    ).ToList();
+
+                if (!recipes.Any())
+                {
+                    TempData["RecipeSearchInfo"] = "Aradığınız kriterlere uygun tarif bulunamadı.";
+                }
+            }
 
             var cartItems = _cartService.GetCart();
             var cartProductIds = cartItems.Select(c => c.ProductId).ToList();
@@ -36,6 +60,7 @@ namespace OrganikMarketProje.Controllers
                 .ToList();
 
             ViewBag.SuggestedRecipes = matchingRecipes;
+
             return View(recipes);
         }
 
@@ -43,7 +68,7 @@ namespace OrganikMarketProje.Controllers
         {
             var recipe = _context.Recipes
                 .Include(r => r.Ingredients!)
-                .ThenInclude(ri => ri.Product)
+                    .ThenInclude(ri => ri.Product)
                 .FirstOrDefault(r => r.Id == id);
 
             if (recipe == null)
@@ -63,13 +88,10 @@ namespace OrganikMarketProje.Controllers
 
             ViewBag.RecipeComments = comments;
             ViewBag.AverageRating = comments.Any() ? comments.Average(c => c.Rating) : 0;
-
-            // 🔧 Eksik olan bu satırı ekle
             ViewBag.RecipeId = id;
 
             return View(recipe);
         }
-
 
         [Authorize(Roles = "Admin")]
         public IActionResult Create()

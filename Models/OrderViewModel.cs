@@ -9,7 +9,7 @@ namespace OrganikMarketProje.Models
         public string DeliveryAddress { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Telefon numarası alanı zorunludur.")]
-        [RegularExpression(@"^\d{10,15}$", ErrorMessage = "Telefon numarası yalnızca rakamlardan oluşmalı ve 10-15 hane arası olmalıdır.")]
+        [RegularExpression(@"^(\+90|0)?5\d{9}$", ErrorMessage = "Telefon numarası düzgün formatta olmalıdır.")]
         public string PhoneNumber { get; set; } = string.Empty;
 
         [StringLength(500, ErrorMessage = "Not en fazla 500 karakter olabilir.")]

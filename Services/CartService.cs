@@ -41,7 +41,6 @@ namespace OrganikMarketProje.Services
         public bool AddToCart(Product product, int quantity, out string message)
         {
             message = "";
-
             var cart = GetCart();
             var existingItem = cart.FirstOrDefault(c => c.ProductId == product.Id);
 
@@ -85,6 +84,26 @@ namespace OrganikMarketProje.Services
         public void ClearCart()
         {
             SaveCart(new List<CartItem>());
+        }
+
+        // ✅ Yeni: Adet Güncelleme Metodu
+        public void UpdateQuantity(int productId, int quantity)
+        {
+            var cart = GetCart();
+            var existingItem = cart.FirstOrDefault(c => c.ProductId == productId);
+            if (existingItem != null)
+            {
+                if (quantity <= 0)
+                {
+                    cart.Remove(existingItem);
+                }
+                else
+                {
+                    existingItem.Quantity = quantity;
+                }
+
+                SaveCart(cart);
+            }
         }
     }
 }

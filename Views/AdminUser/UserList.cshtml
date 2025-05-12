@@ -2,7 +2,14 @@
 
 <h2>Kullanıcı Listesi</h2>
 
-<table class="table table-bordered table-striped">
+@if (TempData["SuccessMessage"] != null)
+{
+        <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+        </div>
+}
+
+<table class="table table-bordered">
     <thead>
         <tr>
             <th>Kullanıcı Adı</th>
@@ -19,13 +26,10 @@
                     <td>@user.Email</td>
                     <td>@user.Roles</td>
                     <td>
-                        <a asp-action="ChangeRole" asp-route-id="@user.Id" class="btn btn-sm btn-primary">
-                            Rol Değiştir
-                        </a>
-                        <a asp-action="DeleteUser" asp-route-id="@user.Id" class="btn btn-sm btn-danger" 
-                           onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">
-                            Sil
-                        </a>
+                        <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-sm btn-warning">Düzenle</a>
+                        <a asp-action="DeleteUser" asp-route-id="@user.Id" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">Sil</a>
+                        <a asp-action="ChangeRole" asp-route-id="@user.Id" class="btn btn-sm btn-info">Rol Değiştir</a>
                     </td>
                 </tr>
         }

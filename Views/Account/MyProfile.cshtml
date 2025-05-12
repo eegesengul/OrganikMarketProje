@@ -1,0 +1,61 @@
+﻿@model OrganikMarketProje.Models.ProfileViewModel
+
+<h2 class="text-center mb-4">Profilim</h2>
+
+@if (TempData["ProfileMessage"] != null)
+{
+        <div class="alert alert-success">@TempData["ProfileMessage"]</div>
+}
+
+<partial name="_ValidationSummary" />
+
+<form asp-action="MyProfile" method="post">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Ad Soyad</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Surname" class="form-label">Soyad</label>
+        <input asp-for="Surname" class="form-control" />
+        <span asp-validation-for="Surname" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label">E-posta</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Profil Bilgilerini Güncelle</button>
+</form>
+
+<hr />
+
+<h5>Şifre Değiştir (Opsiyonel)</h5>
+<p>Eğer şifrenizi değiştirmek istiyorsanız, mevcut şifrenizi girin ve yeni şifrenizi belirleyin.</p>
+
+<form asp-action="ChangePassword" method="post">
+    <div class="mb-3">
+        <label asp-for="CurrentPassword" class="form-label">Mevcut Şifre</label>
+        <input asp-for="CurrentPassword" class="form-control" />
+        <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NewPassword" class="form-label">Yeni Şifre</label>
+        <input asp-for="NewPassword" class="form-control" />
+        <span asp-validation-for="NewPassword" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ConfirmNewPassword" class="form-label">Yeni Şifreyi Tekrar Girin</label>
+        <input asp-for="ConfirmNewPassword" class="form-control" />
+        <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-danger">Şifreyi Güncelle</button>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

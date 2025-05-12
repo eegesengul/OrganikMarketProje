@@ -1,45 +1,62 @@
 ﻿@model List<OrganikMarketProje.Models.CartItem>
 
-<h2>Sepetim</h2>
+<h2 class="mb-4">Sepetim</h2>
 
-@if (Model.Count == 0)
+@if (TempData["CartMessage"] != null)
+{
+        <div class="alert alert-success">@TempData["CartMessage"]</div>
+}
+@if (TempData["CartError"] != null)
+{
+        <div class="alert alert-danger">@TempData["CartError"]</div>
+}
+
+@if (Model == null || !Model.Any())
 {
         <p>Sepetiniz boş.</p>
 }
 else
 {
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Ürün</th>
-                    <th>Fiyat</th>
-                    <th>Miktar</th>
-                    <th>Toplam</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in Model)
-            {
+        <form asp-action="Update" method="post">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
                     <tr>
-                        <td>@item.Product?.Name</td>
-                        <td>@item.Product?.Price ₺</td>
-                        <td>@item.Quantity</td>
-                        <td>@(item.Product?.Price * item.Quantity) ₺</td>
-                        <td>
-                            <a asp-action="Remove" asp-route-productId="@item.ProductId" class="btn btn-danger btn-sm">Sil</a>
-                        </td>
+                        <th>Ürün</th>
+                        <th>Fiyat</th>
+                        <th style="width: 140px;">Miktar</th>
+                        <th>Toplam</th>
+                        <th></th>
                     </tr>
-            }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                @foreach (var item in Model)
+                {
+                            <tr>
+                                <td>@item.Product?.Name</td>
+                                <td>@item.Product?.Price ₺</td>
+                                <td>
+                                    <form asp-action="Update" method="post" class="d-flex">
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <input type="number" name="quantity" value="@item.Quantity" min="1" max="@item.Product.StockQuantity"
+                                               class="form-control form-control-sm me-2" style="width: 70px;" />
+                                        <button type="submit" class="btn btn-sm btn-outline-primary">Güncelle</button>
+                                    </form>
+                                </td>
+                                <td>@(item.Product?.Price * item.Quantity) ₺</td>
+                                <td>
+                                    <a asp-action="Remove" asp-route-productId="@item.ProductId" class="btn btn-sm btn-danger">Sil</a>
+                                </td>
+                            </tr>
+                }
+                </tbody>
+            </table>
+        </form>
 
-        <p><strong>Toplam:</strong> @Model.Sum(x => x.Product.Price * x.Quantity) ₺</p>
+        <p class="fw-bold">Toplam: @Model.Sum(x => x.Product.Price * x.Quantity) ₺</p>
 
         <div class="d-flex gap-2">
             <a asp-action="Clear" class="btn btn-warning">Sepeti Temizle</a>
 
-            <!-- Siparişi Tamamla Butonu -->
             <form asp-controller="Order" asp-action="Checkout" method="post">
                 <button type="submit" class="btn btn-primary">Siparişi Tamamla</button>
             </form>

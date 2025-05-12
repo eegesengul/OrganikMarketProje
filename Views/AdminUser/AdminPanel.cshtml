@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Admin Paneli";
+}
+
+<h2>Admin Paneli</h2>
+
+<div class="container">
+    <nav>
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("UserList", "AdminUser")">Kullanıcı Yönetimi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Index", "AdminReport")">Raporlar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("DateRangeReport", "AdminReport")">Tarih Aralığı Raporu</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("ManageOrders", "AdminOrder")">Sipariş Yönetimi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("ManageComments", "AdminComment")">Yorum Yönetimi</a>
+            </li>
+        </ul>
+    </nav>
+</div>
