@@ -17,7 +17,80 @@ namespace OrganikMarketProje.Controllers
             _signInManager = signInManager;
         }
 
-        // Profil Görüntüleme ve Düzenleme
+        // ✅ Kayıt Olma (Register GET)
+        [HttpGet]
+        public IActionResult Register() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = new AppUser
+            {
+                UserName = model.Email,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                Name = model.Name,
+                Surname = model.Surname
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "User");
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
+        }
+
+
+        // ✅ Giriş Yapma (Login GET)
+        [HttpGet]
+        public IActionResult Login() => View();
+
+        // ✅ Giriş Yapma (Login POST)
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+
+            if (result.Succeeded)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var roles = await _userManager.GetRolesAsync(user);
+
+                if (roles.Contains("Admin"))
+                    return RedirectToAction("AdminPanel", "AdminUser");
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError(string.Empty, "Geçersiz giriş bilgileri.");
+            return View(model);
+        }
+
+        // ✅ Çıkış Yapma
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        // ✅ Profil Bilgilerini Getirme
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> MyProfile()
@@ -35,25 +108,25 @@ namespace OrganikMarketProje.Controllers
             return View(model);
         }
 
-        // Profil Güncelleme
+        // ✅ Profil Bilgilerini Güncelleme
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> MyProfile(ProfileViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
-            // Profil bilgilerini güncelle
             user.Name = model.Name;
             user.Surname = model.Surname;
 
-            // E-posta değişikliği yapılmışsa
             if (user.Email != model.Email)
             {
                 user.Email = model.Email;
-                user.UserName = model.Email;  // UserName de e-posta ile güncelleniyor
+                user.UserName = model.Email;
+
                 var emailUpdateResult = await _userManager.UpdateAsync(user);
                 if (!emailUpdateResult.Succeeded)
                 {
@@ -63,15 +136,12 @@ namespace OrganikMarketProje.Controllers
                     return View(model);
                 }
 
-                // E-posta değişikliği sonrası mevcut oturumu sonlandır
                 await _signInManager.SignOutAsync();
-
-                // Kullanıcıyı çıkış yapmaya yönlendir
-                TempData["ProfileMessage"] = "E-posta başarıyla değiştirildi. Lütfen yeni e-posta ile giriş yapın.";
+                TempData["ProfileMessage"] = "E-posta güncellendi. Lütfen yeniden giriş yapın.";
                 return RedirectToAction("Login", "Account");
             }
 
-            // Şifre değişikliği yapılacaksa, mevcut şifreyi kontrol et
+            // Şifre güncelleme işlemi
             if (!string.IsNullOrEmpty(model.NewPassword))
             {
                 if (string.IsNullOrEmpty(model.CurrentPassword))
@@ -80,7 +150,6 @@ namespace OrganikMarketProje.Controllers
                     return View(model);
                 }
 
-                // Şifre onayı yapılacak
                 if (model.NewPassword != model.ConfirmNewPassword)
                 {
                     ModelState.AddModelError("", "Yeni şifreler uyuşmuyor.");
@@ -96,88 +165,21 @@ namespace OrganikMarketProje.Controllers
                     return View(model);
                 }
 
-                // Şifre değişikliği sonrası, kullanıcıyı yeniden oturum açtır
-                await _signInManager.SignOutAsync(); // Çıkış işlemi
-                TempData["ProfileMessage"] = "Şifreniz başarıyla değiştirildi. Lütfen yeni şifreniz ile giriş yapın.";
+                await _signInManager.SignOutAsync();
+                TempData["ProfileMessage"] = "Şifreniz başarıyla değiştirildi. Lütfen giriş yapın.";
                 return RedirectToAction("Login", "Account");
             }
-            else
+
+            // Sadece isim soyisim güncelleme
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
             {
-                // Eğer şifre değişikliği yoksa, sadece kullanıcı bilgilerini güncelle
-                var updateResult = await _userManager.UpdateAsync(user);
-                if (!updateResult.Succeeded)
-                {
-                    ModelState.AddModelError("", "Profil güncellenirken hata oluştu.");
-                    return View(model);
-                }
+                ModelState.AddModelError("", "Profil güncellenirken bir hata oluştu.");
+                return View(model);
             }
 
-            TempData["ProfileMessage"] = "Profil bilgileri başarıyla güncellendi.";
+            TempData["ProfileMessage"] = "Profil başarıyla güncellendi.";
             return RedirectToAction("MyProfile");
-        }
-
-        // Kayıt Olma
-        public IActionResult Register() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> Register(string name, string surname, string phone, string email, string password)
-        {
-            var user = new AppUser
-            {
-                UserName = email,
-                Email = email,
-                PhoneNumber = phone,
-                Name = name,
-                Surname = surname
-            };
-
-            var result = await _userManager.CreateAsync(user, password);
-
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(user, "User");
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
-            }
-
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-            return View();
-        }
-
-        // Giriş Yapma
-        public IActionResult Login() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
-        {
-            var result = await _signInManager.PasswordSignInAsync(email, password, false, false);
-
-            if (result.Succeeded)
-            {
-                var user = await _userManager.FindByEmailAsync(email);
-                var roles = await _userManager.GetRolesAsync(user);
-
-                if (roles.Contains("Admin"))
-                {
-                    return RedirectToAction("AdminPanel", "AdminUser");  // Admin sayfasına yönlendir
-                }
-
-                return RedirectToAction("Index", "Home");  // Kullanıcıyı normal anasayfaya yönlendir
-            }
-
-            ModelState.AddModelError(string.Empty, "Geçersiz giriş.");
-            return View();
-        }
-
-        // Çıkış Yapma
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
         }
     }
 }
