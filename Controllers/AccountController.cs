@@ -17,7 +17,6 @@ namespace OrganikMarketProje.Controllers
             _signInManager = signInManager;
         }
 
-        // ✅ Kayıt Olma (Register GET)
         [HttpGet]
         public IActionResult Register() => View();
 
@@ -46,19 +45,14 @@ namespace OrganikMarketProje.Controllers
             }
 
             foreach (var error in result.Errors)
-            {
                 ModelState.AddModelError(string.Empty, error.Description);
-            }
 
             return View(model);
         }
 
-
-        // ✅ Giriş Yapma (Login GET)
         [HttpGet]
         public IActionResult Login() => View();
 
-        // ✅ Giriş Yapma (Login POST)
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
@@ -82,7 +76,6 @@ namespace OrganikMarketProje.Controllers
             return View(model);
         }
 
-        // ✅ Çıkış Yapma
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
@@ -90,7 +83,6 @@ namespace OrganikMarketProje.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        // ✅ Profil Bilgilerini Getirme
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> MyProfile()
@@ -108,42 +100,68 @@ namespace OrganikMarketProje.Controllers
             return View(model);
         }
 
-        // ✅ Profil Bilgilerini Güncelleme
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> MyProfile(ProfileViewModel model)
+        public async Task<IActionResult> MyProfile(ProfileViewModel model, string FormType)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
-            user.Name = model.Name;
-            user.Surname = model.Surname;
-
-            if (user.Email != model.Email)
+            // 🔁 Profil Güncelleme Formu
+            if (FormType == "Profile")
             {
-                user.Email = model.Email;
-                user.UserName = model.Email;
+                // Şifre alanlarını doğrulamadan çıkar
+                ModelState.Remove(nameof(model.CurrentPassword));
+                ModelState.Remove(nameof(model.NewPassword));
+                ModelState.Remove(nameof(model.ConfirmNewPassword));
 
-                var emailUpdateResult = await _userManager.UpdateAsync(user);
-                if (!emailUpdateResult.Succeeded)
+                if (!ModelState.IsValid)
+                    return View(model);
+
+                user.Name = model.Name;
+                user.Surname = model.Surname;
+
+                if (user.Email != model.Email)
                 {
-                    foreach (var error in emailUpdateResult.Errors)
-                        ModelState.AddModelError("", error.Description);
+                    user.Email = model.Email;
+                    user.UserName = model.Email;
 
+                    var emailUpdateResult = await _userManager.UpdateAsync(user);
+                    if (!emailUpdateResult.Succeeded)
+                    {
+                        foreach (var error in emailUpdateResult.Errors)
+                            ModelState.AddModelError("", error.Description);
+
+                        return View(model);
+                    }
+
+                    await _signInManager.SignOutAsync();
+                    TempData["ProfileMessage"] = "E-posta güncellendi. Lütfen yeniden giriş yapın.";
+                    return RedirectToAction("Login", "Account");
+                }
+
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (!updateResult.Succeeded)
+                {
+                    ModelState.AddModelError("", "Profil güncellenirken bir hata oluştu.");
                     return View(model);
                 }
 
-                await _signInManager.SignOutAsync();
-                TempData["ProfileMessage"] = "E-posta güncellendi. Lütfen yeniden giriş yapın.";
-                return RedirectToAction("Login", "Account");
+                TempData["ProfileMessage"] = "Profil başarıyla güncellendi.";
+                return RedirectToAction("MyProfile");
             }
 
-            // Şifre güncelleme işlemi
-            if (!string.IsNullOrEmpty(model.NewPassword))
+            // 🔁 Şifre Güncelleme Formu
+            else if (FormType == "Password")
             {
+                // Profil alanlarını doğrulamadan çıkar
+                ModelState.Remove(nameof(model.Name));
+                ModelState.Remove(nameof(model.Surname));
+                ModelState.Remove(nameof(model.Email));
+
+                if (!ModelState.IsValid)
+                    return View(model);
+
                 if (string.IsNullOrEmpty(model.CurrentPassword))
                 {
                     ModelState.AddModelError("", "Mevcut şifreyi girmeniz gerekmektedir.");
@@ -170,16 +188,7 @@ namespace OrganikMarketProje.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            // Sadece isim soyisim güncelleme
-            var updateResult = await _userManager.UpdateAsync(user);
-            if (!updateResult.Succeeded)
-            {
-                ModelState.AddModelError("", "Profil güncellenirken bir hata oluştu.");
-                return View(model);
-            }
-
-            TempData["ProfileMessage"] = "Profil başarıyla güncellendi.";
-            return RedirectToAction("MyProfile");
+            return View(model);
         }
     }
 }

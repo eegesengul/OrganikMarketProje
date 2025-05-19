@@ -9,7 +9,10 @@
 
 <partial name="_ValidationSummary" />
 
+<!-- PROFİL BİLGİLERİ GÜNCELLEME FORMU -->
 <form asp-action="MyProfile" method="post">
+    <input type="hidden" name="FormType" value="Profile" />
+
     <div class="mb-3">
         <label asp-for="Name" class="form-label">Ad Soyad</label>
         <input asp-for="Name" class="form-control" />
@@ -34,22 +37,25 @@
 <h5>Şifre Değiştir (Opsiyonel)</h5>
 <p>Eğer şifrenizi değiştirmek istiyorsanız, mevcut şifrenizi girin ve yeni şifrenizi belirleyin.</p>
 
-<form asp-action="ChangePassword" method="post">
+<!-- ŞİFRE GÜNCELLEME FORMU -->
+<form asp-action="MyProfile" method="post">
+    <input type="hidden" name="FormType" value="Password" />
+
     <div class="mb-3">
         <label asp-for="CurrentPassword" class="form-label">Mevcut Şifre</label>
-        <input asp-for="CurrentPassword" class="form-control" />
+        <input asp-for="CurrentPassword" class="form-control" type="password" />
         <span asp-validation-for="CurrentPassword" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="NewPassword" class="form-label">Yeni Şifre</label>
-        <input asp-for="NewPassword" class="form-control" />
+        <input asp-for="NewPassword" class="form-control" type="password" />
         <span asp-validation-for="NewPassword" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="ConfirmNewPassword" class="form-label">Yeni Şifreyi Tekrar Girin</label>
-        <input asp-for="ConfirmNewPassword" class="form-control" />
+        <input asp-for="ConfirmNewPassword" class="form-control" type="password" />
         <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
     </div>
 
