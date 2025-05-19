@@ -6,19 +6,20 @@ namespace OrganikMarketProje.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        public string Title { get; set; } = string.Empty; // Tarif Başlığı
+        [Required(ErrorMessage = "Başlık zorunludur.")]
+        [StringLength(100, ErrorMessage = "Başlık en fazla 100 karakter olabilir.")]
+        public string Title { get; set; } = string.Empty;
 
-        [Required]
-        public string Instructions { get; set; } = string.Empty; // Tarif Açıklaması (Nasıl Yapılır?)
+        [Required(ErrorMessage = "Hazırlanışı zorunludur.")]
+        [StringLength(1000, ErrorMessage = "Hazırlanış açıklaması en fazla 1000 karakter olabilir.")]
+        public string Instructions { get; set; } = string.Empty;
 
-        [Required]
-        public int DurationMinutes { get; set; } // Tarif Süresi (Dakika)
+        [Required(ErrorMessage = "Süre zorunludur.")]
+        public int DurationMinutes { get; set; }
 
-        public byte[]? ImageData { get; set; } // Tarif Fotoğrafı
+        public byte[]? ImageData { get; set; }
         public string? ImageType { get; set; }
 
-        // İleride tarifin malzeme listesi olacak (Many-to-Many ilişki)
         public ICollection<RecipeIngredient>? Ingredients { get; set; }
     }
 }

@@ -14,19 +14,28 @@
                     <h2 class="text-danger text-center mb-4">👨‍🍳 Yeni Tarif Ekle</h2>
 
                     <form asp-action="Create" method="post" enctype="multipart/form-data">
+
                         <div class="form-floating mb-3">
-                            <input asp-for="Title" class="form-control" placeholder="Başlık" />
+                            <input asp-for="Title" class="form-control" placeholder="Başlık" maxlength="100" required />
                             <label asp-for="Title">Başlık</label>
+                            <div class="form-text">En fazla 100 karakter</div>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="DurationMinutes" type="number" class="form-control" placeholder="Süre" />
+                            <input asp-for="DurationMinutes" type="number" class="form-control" placeholder="Süre" required />
                             <label asp-for="DurationMinutes">Hazırlama Süresi (Dakika)</label>
                         </div>
 
                         <div class="form-floating mb-4">
-                            <textarea asp-for="Instructions" class="form-control" placeholder="Hazırlanışı" style="height: 120px;"></textarea>
+                            <textarea asp-for="Instructions"
+                                      class="form-control"
+                                      placeholder="Hazırlanışı"
+                                      maxlength="1000"
+                                      style="height: 120px;"
+                                      required
+                                      oninput="document.getElementById('instCount').textContent = this.value.length;"></textarea>
                             <label asp-for="Instructions">Hazırlanışı</label>
+                            <div class="form-text"><span id="instCount">0</span>/1000 karakter</div>
                         </div>
 
                         <div class="mb-4">

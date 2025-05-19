@@ -1,5 +1,8 @@
 ﻿using OrganikMarketProje.Data;
 using OrganikMarketProje.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace OrganikMarketProje.Services
 {
@@ -31,11 +34,24 @@ namespace OrganikMarketProje.Services
         public void Delete(int id)
         {
             var product = _context.Products.Find(id);
-            if (product != null)
-            {
-                _context.Products.Remove(product);
-                _context.SaveChanges();
-            }
+            if (product == null)
+                throw new InvalidOperationException("Silinmek istenen ürün bulunamadı.");
+
+            // İlişkili tüm verileri temizle
+            var cartItems = _context.CartItems.Where(ci => ci.ProductId == id);
+            var orderItems = _context.OrderItems.Where(oi => oi.ProductId == id);
+            var favorites = _context.FavoriteProducts.Where(fp => fp.ProductId == id);
+            var comments = _context.Comments.Where(c => c.ProductId == id);
+            var recipeIngredients = _context.RecipeIngredients.Where(ri => ri.ProductId == id);
+
+            _context.CartItems.RemoveRange(cartItems);
+            _context.OrderItems.RemoveRange(orderItems);
+            _context.FavoriteProducts.RemoveRange(favorites);
+            _context.Comments.RemoveRange(comments);
+            _context.RecipeIngredients.RemoveRange(recipeIngredients);
+
+            _context.Products.Remove(product);
+            _context.SaveChanges();
         }
     }
 }

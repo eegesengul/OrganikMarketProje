@@ -24,6 +24,12 @@ namespace OrganikMarketProje.Models
 
         [Required(ErrorMessage = "Şifre zorunludur.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Şifre en az 6 karakter olmalıdır.")]
+        [DataType(DataType.Password)]
         public string Password { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Şifre tekrarı zorunludur.")]
+        [Compare("Password", ErrorMessage = "Şifreler uyuşmuyor.")]
+        [DataType(DataType.Password)]
+        public string ConfirmPassword { get; set; } = string.Empty;
     }
 }

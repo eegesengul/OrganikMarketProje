@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using OrganikMarketProje.Data;
 using OrganikMarketProje.Models;
 using OrganikMarketProje.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OrganikMarketProje.Controllers
 {
@@ -21,7 +25,6 @@ namespace OrganikMarketProje.Controllers
             _userManager = userManager;
         }
 
-        // 🔍 Arama yönlendirmesi
         [HttpGet]
         public IActionResult Search(string query)
         {
@@ -187,6 +190,7 @@ namespace OrganikMarketProje.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        [HttpPost]
         public IActionResult Delete(int id)
         {
             var recipe = _context.Recipes
@@ -199,11 +203,31 @@ namespace OrganikMarketProje.Controllers
                 return RedirectToAction("Index");
             }
 
-            _context.RecipeIngredients.RemoveRange(recipe.Ingredients);
-            _context.Recipes.Remove(recipe);
-            _context.SaveChanges();
+            try
+            {
+                // İlişkili yorumlar
+                var comments = _context.Comments.Where(c => c.RecipeId == id);
+                _context.Comments.RemoveRange(comments);
 
-            TempData["RecipeMessage"] = "Tarif başarıyla silindi.";
+                // Favori tarifler
+                var favorites = _context.FavoriteRecipes.Where(f => f.RecipeId == id);
+                _context.FavoriteRecipes.RemoveRange(favorites);
+
+                // Malzemeler
+                _context.RecipeIngredients.RemoveRange(recipe.Ingredients);
+
+                // Tarif
+                _context.Recipes.Remove(recipe);
+
+                _context.SaveChanges();
+
+                TempData["RecipeMessage"] = "Tarif başarıyla silindi.";
+            }
+            catch (Exception ex)
+            {
+                TempData["RecipeMessage"] = $"Tarif silinirken hata oluştu: {ex.Message}";
+            }
+
             return RedirectToAction("Index");
         }
     }

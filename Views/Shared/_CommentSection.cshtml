@@ -18,35 +18,35 @@
             <ul class="list-group mb-4">
             @foreach (var c in Model.OrderByDescending(c => c.CreatedAt))
             {
-                        <li class="list-group-item bg-light">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <strong>@c.User?.UserName</strong> – ⭐ @c.Rating
-                                </div>
-                                <small class="text-muted">@c.CreatedAt.ToString("g")</small>
+                    <li class="list-group-item bg-light">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>@c.User?.UserName</strong> – ⭐ @c.Rating
                             </div>
+                            <small class="text-muted">@c.CreatedAt.ToString("g")</small>
+                        </div>
 
-                            <p class="mb-1 mt-2">@Html.Raw(Html.Encode(c.Text))</p>
+                        <p class="mb-1 mt-2">@Html.Raw(Html.Encode(c.Text))</p>
 
                     @if (User.Identity.IsAuthenticated && (c.UserId == currentUserId || isAdmin))
                     {
-                                    <div class="d-flex gap-2 mt-2">
+                                <div class="d-flex gap-2 mt-2">
                             @if (c.UserId == currentUserId)
                             {
-                                                <a asp-controller="Comment" asp-action="Edit" asp-route-id="@c.Id"
-                                                   class="btn btn-sm btn-outline-secondary rounded-pill">Düzenle</a>
+                                            <a asp-controller="Comment" asp-action="Edit" asp-route-id="@c.Id"
+                                               class="btn btn-sm btn-outline-secondary rounded-pill">Düzenle</a>
                             }
 
-                                        <form method="post"
-                                              asp-controller="Comment"
-                                              asp-action="@(isAdmin && c.UserId != currentUserId ? "DeleteByAdmin" : "Delete")"
-                                              asp-route-id="@c.Id"
-                                              onsubmit="return confirm('Yorumu silmek istediğinize emin misiniz?');">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Sil</button>
-                                        </form>
-                                    </div>
+                                    <form method="post"
+                                          asp-controller="Comment"
+                                          asp-action="@(isAdmin && c.UserId != currentUserId ? "DeleteByAdmin" : "Delete")"
+                                          asp-route-id="@c.Id"
+                                          onsubmit="return confirm('Yorumu silmek istediğinize emin misiniz?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Sil</button>
+                                    </form>
+                                </div>
                     }
-                        </li>
+                    </li>
             }
             </ul>
     }
@@ -71,8 +71,16 @@
                     }
 
                         <div class="form-floating mb-3">
-                            <textarea name="Text" class="form-control" placeholder="Yorum" style="height: 100px;" required></textarea>
+                            <textarea name="Text"
+                                      id="commentText"
+                                      class="form-control"
+                                      placeholder="Yorum"
+                                      style="height: 100px;"
+                                      maxlength="300"
+                                      required
+                                      oninput="updateCount(this)"></textarea>
                             <label for="Text">Yorum</label>
+                            <div class="form-text"><span id="charCount">0</span>/300 karakter</div>
                         </div>
 
                         <div class="form-floating mb-3">
@@ -86,6 +94,12 @@
                     </form>
                 </div>
             </div>
+
+            <script>
+                function updateCount(textarea) {
+                    document.getElementById('charCount').textContent = textarea.value.length;
+                }
+            </script>
     }
     else
     {

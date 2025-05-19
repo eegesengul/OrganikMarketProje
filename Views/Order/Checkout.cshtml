@@ -12,22 +12,39 @@
                     <partial name="_ValidationSummary" />
 
                     <form asp-action="Checkout" method="post">
+                        <!-- Teslimat Adresi -->
                         <div class="form-floating mb-3">
-                            <input asp-for="DeliveryAddress" class="form-control" placeholder="Teslimat Adresi" />
+                            <input asp-for="DeliveryAddress"
+                                   class="form-control"
+                                   placeholder="Teslimat Adresi"
+                                   maxlength="300"
+                                   required />
                             <label asp-for="DeliveryAddress">Teslimat Adresi</label>
                             <span asp-validation-for="DeliveryAddress" class="text-danger small"></span>
+                            <div class="form-text">En fazla 300 karakter</div>
                         </div>
 
+                        <!-- Telefon -->
                         <div class="form-floating mb-3">
-                            <input asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası" />
+                            <input asp-for="PhoneNumber"
+                                   class="form-control"
+                                   placeholder="Telefon Numarası"
+                                   required />
                             <label asp-for="PhoneNumber">Telefon Numarası</label>
                             <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                         </div>
 
+                        <!-- Sipariş Notu -->
                         <div class="form-floating mb-4">
-                            <textarea asp-for="Note" class="form-control" placeholder="Sipariş Notu" style="height: 120px;"></textarea>
+                            <textarea asp-for="Note"
+                                      class="form-control"
+                                      placeholder="Sipariş Notu"
+                                      style="height: 120px;"
+                                      maxlength="500"
+                                      oninput="document.getElementById('noteCount').textContent = this.value.length;"></textarea>
                             <label asp-for="Note">Sipariş Notu (isteğe bağlı)</label>
                             <span asp-validation-for="Note" class="text-danger small"></span>
+                            <div class="form-text"><span id="noteCount">0</span>/500 karakter</div>
                         </div>
 
                         <div class="d-grid">

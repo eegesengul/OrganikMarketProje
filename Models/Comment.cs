@@ -17,7 +17,7 @@ namespace OrganikMarketProje.Models
         public Recipe? Recipe { get; set; }
 
         [Required]
-        [StringLength(500)]
+        [StringLength(300)]
         public string Text { get; set; }
 
         [Range(1, 5)]

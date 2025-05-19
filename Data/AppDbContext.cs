@@ -16,7 +16,7 @@ namespace OrganikMarketProje.Data
         public DbSet<FavoriteProduct> FavoriteProducts { get; set; }
         public DbSet<FavoriteRecipe> FavoriteRecipes { get; set; }
         public DbSet<Comment> Comments { get; set; }
-
+        public DbSet<CartItem> CartItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

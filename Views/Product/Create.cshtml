@@ -12,14 +12,27 @@
                     <partial name="_ValidationSummary" />
 
                     <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+                        @* Ürün Adı - Sınırlama eklendi *@
                         <div class="form-floating mb-3">
-                            <input asp-for="Name" class="form-control" placeholder="Ad" required />
+                            <input asp-for="Name" class="form-control" placeholder="Ad" maxlength="100" required />
                             <label asp-for="Name">Ad</label>
+                            <div class="form-text">En fazla 100 karakter</div>
                         </div>
 
+                        @* Açıklama - Sınırlama + sayaç eklendi *@
                         <div class="form-floating mb-3">
-                            <textarea asp-for="Description" class="form-control" placeholder="Açıklama" style="height: 100px;" required></textarea>
+                            <textarea asp-for="Description"
+                                      class="form-control"
+                                      placeholder="Açıklama"
+                                      style="height: 100px;"
+                                      maxlength="1000"
+                                      required
+                                      oninput="document.getElementById('descCount').textContent = this.value.length;"></textarea>
                             <label asp-for="Description">Açıklama</label>
+                            <div class="form-text">
+                                <span id="descCount">0</span>/1000 karakter
+                            </div>
                         </div>
 
                         <div class="form-floating mb-3">
