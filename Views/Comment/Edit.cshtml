@@ -5,34 +5,50 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="mb-4">📝 Yorumu Düzenle</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
 
-<form asp-action="Edit" method="post">
-    @* Gerekli gizli alanlar *@
-    <input type="hidden" asp-for="Id" />
-    <input type="hidden" asp-for="ProductId" />
-    <input type="hidden" asp-for="RecipeId" />
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body bg-light p-4">
 
-    <div class="mb-3">
-        <label asp-for="Text" class="form-label">Yorum</label>
-        <textarea asp-for="Text" class="form-control" rows="4" required></textarea>
-        <span asp-validation-for="Text" class="text-danger"></span>
+                    <h2 class="text-danger text-center mb-4">📝 Yorumu Düzenle</h2>
+
+                    <form asp-action="Edit" method="post">
+                        <!-- Gizli alanlar -->
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="ProductId" />
+                        <input type="hidden" asp-for="RecipeId" />
+
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Text" class="form-control" rows="4" placeholder="Yorum" style="height: 150px;" required></textarea>
+                            <label asp-for="Text">Yorum</label>
+                            <span asp-validation-for="Text" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Rating" type="number" min="1" max="5" class="form-control" placeholder="Puan" required />
+                            <label asp-for="Rating">Puan (1-5)</label>
+                            <span asp-validation-for="Rating" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-success rounded-pill px-4">
+                                <i class="bi bi-check-circle"></i> Kaydet
+                            </button>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                                İptal
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Rating" class="form-label">Puan (1-5)</label>
-        <input asp-for="Rating" type="number" min="1" max="5" class="form-control" required />
-        <span asp-validation-for="Rating" class="text-danger"></span>
-    </div>
-
-    <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">Kaydet</button>
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">İptal</a>
-    </div>
-</form>
+</section>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

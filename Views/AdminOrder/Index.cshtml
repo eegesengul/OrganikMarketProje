@@ -1,44 +1,67 @@
 ﻿@model List<OrganikMarketProje.Models.Order>
 
-<h2>Tüm Siparişler (Admin)</h2>
+<section class="container py-5">
+    <div class="row">
+        <div class="col-12">
 
-@if (TempData["AdminOrderMessage"] != null)
-{
-        <div class="alert alert-success">@TempData["AdminOrderMessage"]</div>
-}
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body p-4 bg-light">
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Kullanıcı</th>
-            <th>Tarih</th>
-            <th>Durum</th>
-            <th>Detay</th>
-            <th>Durum Güncelle</th>
-            <th>Sil</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var order in Model)
-        {
-                <tr>
-                    <td>@order.Id</td>
-                    <td>@order.UserName</td>
-                    <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
-                    <td>@order.Status</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-info btn-sm">Detay</a>
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@order.Id" class="btn btn-warning btn-sm">Durumu Değiştir</a>
-                    </td>
-                    <td>
-                        <form asp-action="Delete" asp-route-id="@order.Id" method="post" onsubmit="return confirm('Bu siparişi silmek istediğinizden emin misiniz?');">
-                            <button type="submit" class="btn btn-danger btn-sm">Sil</button>
-                        </form>
-                    </td>
-                </tr>
-        }
-    </tbody>
-</table>
+                    <h2 class="text-danger mb-4">📋 Tüm Siparişler (Admin)</h2>
+
+                    @if (TempData["AdminOrderMessage"] != null)
+                    {
+                            <div class="alert alert-success">@TempData["AdminOrderMessage"]</div>
+                    }
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-warning text-center">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Kullanıcı</th>
+                                    <th>Tarih</th>
+                                    <th>Durum</th>
+                                    <th>Detay</th>
+                                    <th>Durum</th>
+                                    <th>Sil</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var order in Model)
+                                {
+                                        <tr>
+                                            <td>@order.Id</td>
+                                            <td>@order.UserName</td>
+                                            <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                            <td>@order.Status</td>
+                                            <td>
+                                                <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-info btn-sm rounded-pill">
+                                                    <i class="bi bi-eye"></i> Detay
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a asp-action="Edit" asp-route-id="@order.Id" class="btn btn-warning btn-sm rounded-pill text-dark">
+                                                    <i class="bi bi-pencil-square"></i> Durum
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <form asp-action="Delete" asp-route-id="@order.Id" method="post"
+                                                      onsubmit="return confirm('Bu siparişi silmek istediğinizden emin misiniz?');">
+                                                    <button type="submit" class="btn btn-danger btn-sm rounded-pill">
+                                                        <i class="bi bi-trash3"></i> Sil
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

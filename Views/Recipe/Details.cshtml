@@ -5,62 +5,85 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>@Model.Title</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
 
-@if (Model.ImageData != null)
-{
-        <img src="data:@Model.ImageType;base64,@Convert.ToBase64String(Model.ImageData)" width="300" class="mb-3" />
-}
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body bg-light p-4">
 
-<p><strong>Süre:</strong> @Model.DurationMinutes dakika</p>
+                    <h2 class="text-danger mb-4">👨‍🍳 @Model.Title</h2>
 
-@if (ViewBag.AverageRating > 0)
-{
-        <p><strong>Ortalama Puan:</strong> ⭐ @string.Format("{0:0.0}", ViewBag.AverageRating) / 5</p>
-}
-else
-{
-        <p><em>Henüz puan verilmemiş.</em></p>
-}
+                    @if (Model.ImageData != null)
+                    {
+                            <img src="data:@Model.ImageType;base64,@Convert.ToBase64String(Model.ImageData)"
+                                 class="img-fluid rounded-3 shadow-sm mb-4" style="max-width: 300px;" />
+                    }
 
-<h3>Malzemeler:</h3>
-<ul>
-    @foreach (var ingredient in Model.Ingredients)
-    {
-            <li>
-            @ingredient.Product?.Name - @ingredient.Quantity
-                <form method="post" asp-controller="Cart" asp-action="AddFromRecipe" style="display:inline;">
-                    <input type="hidden" name="productId" value="@ingredient.ProductId" />
-                    <input type="hidden" name="quantity" value="1" />
-                    <button type="submit" class="btn btn-sm btn-outline-secondary ms-2">Sepete Ekle</button>
-                </form>
-            </li>
-    }
-</ul>
+                    <p><strong>⏱️ Süre:</strong> @Model.DurationMinutes dakika</p>
 
-<h3>Hazırlanışı:</h3>
-<p>@Model.Instructions</p>
+                    @if (ViewBag.AverageRating > 0)
+                    {
+                            <p><strong>⭐ Ortalama Puan:</strong> @string.Format("{0:0.0}", ViewBag.AverageRating) / 5</p>
+                    }
+                    else
+                    {
+                            <p class="text-muted"><em>Henüz puan verilmemiş.</em></p>
+                    }
 
-<hr />
+                    <hr class="my-4" />
 
-<!-- Favorilere Ekle/Kaldır -->
-@if (User.Identity.IsAuthenticated)
-{
-        <form method="post" asp-controller="Favorite" asp-action="ToggleRecipe">
-            <input type="hidden" name="recipeId" value="@Model.Id" />
-            <button type="submit" class="btn btn-outline-warning">
-            @(ViewBag.IsFavorite != null && ViewBag.IsFavorite
-                    ? "⭐ Favorilerden Kaldır"
-                    : "⭐ Favorilere Ekle")
-            </button>
-        </form>
-}
-else
-{
-        <p><em>Favorilere eklemek için <a asp-controller="Account" asp-action="Login">giriş yapın</a>.</em></p>
-}
+                    <h4 class="text-warning">🥕 Malzemeler:</h4>
+                    <ul class="list-group mb-4">
+                        @foreach (var ingredient in Model.Ingredients)
+                        {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@ingredient.Product?.Name</strong> – @ingredient.Quantity
+                                    </div>
+                                    <form method="post" asp-controller="Cart" asp-action="AddFromRecipe" class="ms-3">
+                                        <input type="hidden" name="productId" value="@ingredient.ProductId" />
+                                        <input type="hidden" name="quantity" value="1" />
+                                        <button type="submit" class="btn btn-sm btn-outline-success rounded-pill">
+                                            <i class="bi bi-cart-plus"></i> Sepete Ekle
+                                        </button>
+                                    </form>
+                                </li>
+                        }
+                    </ul>
 
-<hr />
+                    <h4 class="text-secondary">📖 Hazırlanışı:</h4>
+                    <p>@Model.Instructions</p>
 
-<!-- Yorumlar -->
-@await Html.PartialAsync("_CommentSection", ViewBag.RecipeComments as List<OrganikMarketProje.Models.Comment>)
+                    <hr class="my-4" />
+
+                    <!-- Favorilere Ekle/Kaldır -->
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                            <form method="post" asp-controller="Favorite" asp-action="ToggleRecipe">
+                                <input type="hidden" name="recipeId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-outline-warning rounded-pill">
+                                @(ViewBag.IsFavorite != null && ViewBag.IsFavorite
+                                        ? "⭐ Favorilerden Kaldır"
+                                        : "⭐ Favorilere Ekle")
+                                </button>
+                            </form>
+                    }
+                    else
+                    {
+                            <p class="text-muted mt-3">
+                                <em>Favorilere eklemek için <a asp-controller="Account" asp-action="Login">giriş yapın</a>.</em>
+                            </p>
+                    }
+
+                    <hr class="my-4" />
+
+                    <!-- Yorumlar -->
+                    @await Html.PartialAsync("_CommentSection", ViewBag.RecipeComments as List<OrganikMarketProje.Models.Comment>)
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

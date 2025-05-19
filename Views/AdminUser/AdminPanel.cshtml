@@ -2,26 +2,48 @@
     ViewData["Title"] = "Admin Paneli";
 }
 
-<h2>Admin Paneli</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
 
-<div class="container">
-    <nav>
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="@Url.Action("UserList", "AdminUser")">Kullanıcı Yönetimi</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="@Url.Action("Index", "AdminReport")">Raporlar</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="@Url.Action("DateRangeReport", "AdminReport")">Tarih Aralığı Raporu</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="@Url.Action("ManageOrders", "AdminOrder")">Sipariş Yönetimi</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="@Url.Action("ManageComments", "AdminComment")">Yorum Yönetimi</a>
-            </li>
-        </ul>
-    </nav>
-</div>
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body p-4 bg-light">
+
+                    <h2 class="text-danger text-center mb-4">⚙️ Admin Paneli</h2>
+
+                    <nav>
+                        <ul class="nav flex-column gap-2">
+                            <li class="nav-item">
+                                <a class="btn btn-outline-primary w-100 text-start" href="@Url.Action("UserList", "AdminUser")">
+                                    👥 Kullanıcı Yönetimi
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-warning w-100 text-start" href="@Url.Action("Index", "AdminReport")">
+                                    📊 Raporlar
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-warning w-100 text-start" href="@Url.Action("DateRangeReport", "AdminReport")">
+                                    🗓️ Tarih Aralığı Raporu
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-danger w-100 text-start" href="@Url.Action("ManageOrders", "AdminOrder")">
+                                    📦 Sipariş Yönetimi
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-secondary w-100 text-start" href="@Url.Action("ManageComments", "AdminComment")">
+                                    💬 Yorum Yönetimi
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

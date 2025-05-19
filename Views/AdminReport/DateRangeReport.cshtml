@@ -4,73 +4,94 @@
     ViewData["Title"] = "Tarih Aralığına Göre Rapor";
 }
 
-<h2>Tarih Aralığına Göre Rapor</h2>
+<section class="container py-5">
+    <div class="row">
+        <div class="col-12">
 
-<form asp-action="DateRangeReport" method="post" class="row g-3 mb-4">
-    <div class="col-md-4">
-        <label for="startDate" class="form-label">Başlangıç Tarihi</label>
-        <input type="date" class="form-control" id="startDate" name="startDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required />
-    </div>
-    <div class="col-md-4">
-        <label for="endDate" class="form-label">Bitiş Tarihi</label>
-        <input type="date" class="form-control" id="endDate" name="endDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required />
-    </div>
-    <div class="col-md-4 align-self-end">
-        <button type="submit" class="btn btn-primary">Raporu Getir</button>
-    </div>
-</form>
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body p-4 bg-light">
 
-@if (Model.TotalOrders > 0)
-{
-        <div class="alert alert-success">
-            <strong>@Model.TotalOrders</strong> sipariş bulundu, toplam ciro: <strong>@Model.TotalRevenue ₺</strong>
+                    <h2 class="text-danger mb-4">📊 Tarih Aralığına Göre Rapor</h2>
+
+                    <form asp-action="DateRangeReport" method="post" class="row g-4 mb-4">
+                        <div class="col-md-4">
+                            <label for="startDate" class="form-label fw-semibold">Başlangıç Tarihi</label>
+                            <input type="date" class="form-control" id="startDate" name="startDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label for="endDate" class="form-label fw-semibold">Bitiş Tarihi</label>
+                            <input type="date" class="form-control" id="endDate" name="endDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="col-md-4 align-self-end d-grid">
+                            <button type="submit" class="btn btn-warning btn-lg text-white rounded-pill">
+                                <i class="bi bi-bar-chart-line-fill me-2"></i> Raporu Getir
+                            </button>
+                        </div>
+                    </form>
+
+                    @if (Model.TotalOrders > 0)
+                    {
+                            <div class="alert alert-success">
+                                <strong>@Model.TotalOrders</strong> sipariş bulundu, toplam ciro:
+                                <strong>@Model.TotalRevenue ₺</strong>
+                            </div>
+
+                            <h4 class="text-warning mt-4">🥇 En Çok Sipariş Edilen Ürünler</h4>
+                            <div class="table-responsive">
+                                <table class="table table-striped align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Ürün</th>
+                                            <th>Toplam Adet</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach (var item in Model.TopProducts)
+                                    {
+                                                <tr>
+                                                    <td>@item.ProductName</td>
+                                                    <td>@item.TotalQuantity</td>
+                                                </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <h4 class="text-danger mt-5">🧾 Sipariş Listesi</h4>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover align-middle">
+                                    <thead class="table-warning text-center">
+                                        <tr>
+                                            <th>Sipariş ID</th>
+                                            <th>Kullanıcı</th>
+                                            <th>Tarih</th>
+                                            <th>Toplam Tutar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach (var order in Model.Orders)
+                                    {
+                                                <tr>
+                                                    <td>@order.OrderId</td>
+                                                    <td>@order.UserName</td>
+                                                    <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                                    <td>@order.TotalAmount ₺</td>
+                                                </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                    }
+                    else if (Model.StartDate != DateTime.MinValue && Model.EndDate != DateTime.MinValue)
+                    {
+                            <div class="alert alert-info mt-4">
+                                Bu tarih aralığında sipariş bulunamadı.
+                            </div>
+                    }
+
+                </div>
+            </div>
+
         </div>
-
-        <h4>En Çok Sipariş Edilen Ürünler</h4>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Ürün</th>
-                    <th>Toplam Adet</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in Model.TopProducts)
-            {
-                    <tr>
-                        <td>@item.ProductName</td>
-                        <td>@item.TotalQuantity</td>
-                    </tr>
-            }
-            </tbody>
-        </table>
-
-        <h4 class="mt-4">Tarih Aralığındaki Siparişler</h4>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Sipariş ID</th>
-                    <th>Kullanıcı</th>
-                    <th>Tarih</th>
-                    <th>Toplam Tutar</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var order in Model.Orders)
-            {
-                    <tr>
-                        <td>@order.OrderId</td>
-                        <td>@order.UserName</td>
-                        <td>@order.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>@order.TotalAmount ₺</td>
-                    </tr>
-            }
-            </tbody>
-        </table>
-}
-else if (Model.StartDate != DateTime.MinValue && Model.EndDate != DateTime.MinValue)
-{
-        <div class="alert alert-info">
-            Bu tarih aralığında sipariş bulunamadı.
-        </div>
-}
+    </div>
+</section>

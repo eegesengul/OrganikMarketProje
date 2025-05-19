@@ -1,27 +1,39 @@
 ﻿@model OrganikMarketProje.Models.LoginViewModel
 
-<h2 class="text-center mb-4">Giriş Yap</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-body p-4 bg-light">
+                    <h2 class="text-center mb-4 text-danger">🍽️ Giriş Yap</h2>
 
-<partial name="_ValidationSummary" />
+                    <partial name="_ValidationSummary" />
 
-<form asp-action="Login" method="post">
-    <div class="mb-3">
-        <label asp-for="Email">E-posta</label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+                    <form asp-action="Login" method="post">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control" placeholder="E-posta" />
+                            <label asp-for="Email">E-posta</label>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Şifre" />
+                            <label asp-for="Password">Şifre</label>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger btn-lg rounded-pill">
+                                <i class="bi bi-box-arrow-in-right me-2"></i> Giriş Yap
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="Password">Şifre</label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div class="text-center">
-        <button type="submit" class="btn btn-success">Giriş Yap</button>
-    </div>
-</form>
+</section>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

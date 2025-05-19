@@ -1,69 +1,98 @@
 ﻿@model List<OrganikMarketProje.Models.CartItem>
 
-<h2 class="mb-4">Sepetim</h2>
+<section class="container py-5">
+    <div class="row">
+        <div class="col-12">
 
-@if (TempData["CartMessage"] != null)
-{
-        <div class="alert alert-success">@TempData["CartMessage"]</div>
-}
-@if (TempData["CartError"] != null)
-{
-        <div class="alert alert-danger">@TempData["CartError"]</div>
-}
+            <div class="card shadow rounded-4 border-0 mb-4">
+                <div class="card-body bg-light p-4">
 
-@if (Model == null || !Model.Any())
-{
-        <p>Sepetiniz boş.</p>
-}
-else
-{
-        <form asp-action="Update" method="post">
-            <table class="table table-bordered align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Ürün</th>
-                        <th>Fiyat</th>
-                        <th style="width: 140px;">Miktar</th>
-                        <th>Toplam</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                @foreach (var item in Model)
-                {
-                            <tr>
-                                <td>@item.Product?.Name</td>
-                                <td>@item.Product?.Price ₺</td>
-                                <td>
-                                    <form asp-action="Update" method="post" class="d-flex">
-                                        <input type="hidden" name="productId" value="@item.ProductId" />
-                                        <input type="number" name="quantity" value="@item.Quantity" min="1" max="@item.Product.StockQuantity"
-                                               class="form-control form-control-sm me-2" style="width: 70px;" />
-                                        <button type="submit" class="btn btn-sm btn-outline-primary">Güncelle</button>
-                                    </form>
-                                </td>
-                                <td>@(item.Product?.Price * item.Quantity) ₺</td>
-                                <td>
-                                    <a asp-action="Remove" asp-route-productId="@item.ProductId" class="btn btn-sm btn-danger">Sil</a>
-                                </td>
-                            </tr>
-                }
-                </tbody>
-            </table>
-        </form>
+                    <h2 class="text-danger mb-4">🛒 Sepetim</h2>
 
-        <p class="fw-bold">Toplam: @Model.Sum(x => x.Product.Price * x.Quantity) ₺</p>
+                    @if (TempData["CartMessage"] != null)
+                    {
+                            <div class="alert alert-success">@TempData["CartMessage"]</div>
+                    }
+                    @if (TempData["CartError"] != null)
+                    {
+                            <div class="alert alert-danger">@TempData["CartError"]</div>
+                    }
 
-        <div class="d-flex gap-2">
-            <a asp-action="Clear" class="btn btn-warning">Sepeti Temizle</a>
+                    @if (Model == null || !Model.Any())
+                    {
+                            <div class="alert alert-warning">Sepetiniz boş.</div>
+                    }
+                    else
+                    {
+                            <form asp-action="Update" method="post">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered align-middle table-hover">
+                                        <thead class="table-warning text-center">
+                                            <tr>
+                                                <th>Ürün</th>
+                                                <th>Fiyat</th>
+                                                <th style="width: 160px;">Miktar</th>
+                                                <th>Toplam</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                                    <tr>
+                                                        <td>@item.Product?.Name</td>
+                                                        <td>@item.Product?.Price ₺</td>
+                                                        <td>
+                                                            <form asp-action="Update" method="post" class="d-flex">
+                                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                                <input type="number" name="quantity" value="@item.Quantity"
+                                                                       min="1" max="@item.Product.StockQuantity"
+                                                                       class="form-control form-control-sm me-2 text-center"
+                                                                       style="width: 70px;" />
+                                                                <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill">✔</button>
+                                                            </form>
+                                                        </td>
+                                                        <td>@(item.Product?.Price * item.Quantity) ₺</td>
+                                                        <td>
+                                                            <a asp-action="Remove" asp-route-productId="@item.ProductId"
+                                                               class="btn btn-sm btn-danger rounded-pill">
+                                                                <i class="bi bi-trash3"></i> Sil
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </form>
 
-            <form asp-controller="Order" asp-action="Checkout" method="post">
-                <button type="submit" class="btn btn-primary">Siparişi Tamamla</button>
-            </form>
+                            <div class="d-flex justify-content-between align-items-center mt-4">
+                                <h5 class="fw-bold text-end text-danger mb-0">
+                                    Toplam: @Model.Sum(x => x.Product.Price * x.Quantity) ₺
+                                </h5>
+                            </div>
+
+                            <div class="d-flex gap-3 mt-4">
+                                <a asp-action="Clear" class="btn btn-warning rounded-pill">
+                                    <i class="bi bi-x-circle"></i> Sepeti Temizle
+                                </a>
+
+                                <form asp-controller="Order" asp-action="Checkout" method="post">
+                                    <button type="submit" class="btn btn-success rounded-pill">
+                                        <i class="bi bi-check-circle"></i> Siparişi Tamamla
+                                    </button>
+                                </form>
+                            </div>
+
+                        @if (TempData["OrderError"] != null)
+                        {
+                                    <div class="alert alert-danger mt-3">@TempData["OrderError"]</div>
+                        }
+                    }
+
+                </div>
+            </div>
+
         </div>
-
-    @if (TempData["OrderError"] != null)
-    {
-                <div class="alert alert-danger mt-3">@TempData["OrderError"]</div>
-    }
-}
+    </div>
+</section>

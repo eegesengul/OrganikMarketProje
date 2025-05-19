@@ -1,77 +1,93 @@
 ﻿@model List<OrganikMarketProje.Models.Recipe>
 
-<h2 class="text-center mb-4">Tarifler</h2>
+<section class="container py-5">
+    <h2 class="text-center text-danger mb-4">🍽️ Tarifler</h2>
 
-@if (TempData["RecipeMessage"] != null)
-{
-        <div class="alert alert-success">@TempData["RecipeMessage"]</div>
-}
-@if (TempData["RecipeSearchInfo"] != null)
-{
-        <div class="alert alert-warning">@TempData["RecipeSearchInfo"]</div>
-}
+    @if (TempData["RecipeMessage"] != null)
+    {
+            <div class="alert alert-success">@TempData["RecipeMessage"]</div>
+    }
+    @if (TempData["RecipeSearchInfo"] != null)
+    {
+            <div class="alert alert-warning">@TempData["RecipeSearchInfo"]</div>
+    }
 
-@if (User.IsInRole("Admin"))
-{
-        <div class="text-end mb-4">
-            <a asp-action="Create" class="btn btn-primary">Yeni Tarif Ekle</a>
-        </div>
-}
+    @if (User.IsInRole("Admin"))
+    {
+            <div class="text-end mb-4">
+                <a asp-action="Create" class="btn btn-warning rounded-pill text-white">
+                    <i class="bi bi-plus-circle me-1"></i> Yeni Tarif Ekle
+                </a>
+            </div>
+    }
 
-@if (Model != null && Model.Any())
-{
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-        @foreach (var recipe in Model)
-        {
-                    <div class="col">
-                        <div class="card h-100 shadow-sm">
-                    @if (recipe.ImageData != null)
-                    {
-                                    <img src="data:@recipe.ImageType;base64,@Convert.ToBase64String(recipe.ImageData)" 
-                                         class="card-img-top" style="height: 200px; object-fit: cover;" />
-                    }
-                    else
-                    {
-                                    <div style="height: 200px; background: #f8f9fa;" 
-                                         class="d-flex align-items-center justify-content-center text-muted">
-                                        Görsel Yok
-                                    </div>
-                    }
+    @if (Model != null && Model.Any())
+    {
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var recipe in Model)
+            {
+                        <div class="col">
+                            <div class="card h-100 shadow rounded-4">
 
-                            <div class="card-body">
-                                <h5 class="card-title">@recipe.Title</h5>
-                                <p class="card-text">
-                                    <strong>Süre:</strong> @(recipe.DurationMinutes > 0 ? $"{recipe.DurationMinutes} dakika" : "Belirtilmemiş")
-                                </p>
-                            </div>
-
-                            <div class="card-footer d-flex flex-column gap-2">
-                                <a asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-info btn-sm">Detay</a>
-
-                        @if (User.IsInRole("Admin"))
+                        @if (recipe.ImageData != null)
                         {
-                                        <div class="d-flex justify-content-between">
-                                            <a asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-warning btn-sm">Düzenle</a>
-                                            <form asp-action="Delete" asp-route-id="@recipe.Id" method="post" 
-                                                  onsubmit="return confirm('Bu tarifi silmek istediğinize emin misiniz?');">
-                                                <button type="submit" class="btn btn-danger btn-sm">Sil</button>
-                                            </form>
+                                        <img src="data:@recipe.ImageType;base64,@Convert.ToBase64String(recipe.ImageData)"
+                                             class="card-img-top rounded-top" style="height: 200px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                                        <div style="height: 200px;" class="d-flex align-items-center justify-content-center bg-light text-muted">
+                                            Görsel Yok
                                         </div>
                         }
+
+                                <div class="card-body">
+                                    <h5 class="card-title text-warning">@recipe.Title</h5>
+                                    <p class="card-text">
+                                        <strong>⏱️ Süre:</strong>
+                                @(recipe.DurationMinutes > 0 ? $"{recipe.DurationMinutes} dakika" : "Belirtilmemiş")
+                                    </p>
+                                </div>
+
+                                <div class="card-footer bg-white d-flex flex-column gap-2">
+
+                                    <a asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-info btn-sm rounded-pill text-white">
+                                        <i class="bi bi-eye"></i> Detay
+                                    </a>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                            <div class="d-flex justify-content-between">
+                                                <a asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-sm btn-outline-warning rounded-pill">
+                                                    Düzenle
+                                                </a>
+                                                <form asp-action="Delete" asp-route-id="@recipe.Id" method="post"
+                                                      onsubmit="return confirm('Bu tarifi silmek istediğinize emin misiniz?');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Sil</button>
+                                                </form>
+                                            </div>
+                            }
+
+                                </div>
+
                             </div>
                         </div>
-                    </div>
-        }
-        </div>
-}
+            }
+            </div>
+    }
 
-@if (ViewBag.SuggestedRecipes is List<OrganikMarketProje.Models.Recipe> suggested && suggested.Any())
-{
-        <h3 class="mt-5">Sepetinizdeki ürünlerle yapılabilecek tarifler:</h3>
-        <ul>
-        @foreach (var recipe in suggested)
-        {
-                    <li><a asp-action="Details" asp-route-id="@recipe.Id">@recipe.Title</a></li>
-        }
-        </ul>
-}
+    @if (ViewBag.SuggestedRecipes is List<OrganikMarketProje.Models.Recipe> suggested && suggested.Any())
+    {
+            <h4 class="mt-5 text-success">🥗 Sepetinizdeki ürünlerle yapılabilecek tarifler:</h4>
+            <ul class="list-group list-group-flush">
+            @foreach (var recipe in suggested)
+            {
+                        <li class="list-group-item">
+                            <a asp-action="Details" asp-route-id="@recipe.Id" class="text-decoration-none">
+                        @recipe.Title
+                            </a>
+                        </li>
+            }
+            </ul>
+    }
+</section>

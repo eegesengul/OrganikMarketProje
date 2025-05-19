@@ -1,37 +1,64 @@
 ﻿@model IEnumerable<OrganikMarketProje.Models.UserListViewModel>
 
-<h2>Kullanıcı Listesi</h2>
+<section class="container py-5">
+    <div class="row">
+        <div class="col-12">
 
-@if (TempData["SuccessMessage"] != null)
-{
-        <div class="alert alert-success">
-        @TempData["SuccessMessage"]
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body p-4 bg-light">
+
+                    <h2 class="text-danger mb-4">👥 Kullanıcı Listesi</h2>
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                            <div class="alert alert-success">
+                            @TempData["SuccessMessage"]
+                            </div>
+                    }
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
+                            <thead class="table-warning text-center">
+                                <tr>
+                                    <th>Kullanıcı Adı</th>
+                                    <th>Email</th>
+                                    <th>Roller</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                        <tr>
+                                            <td>@user.UserName</td>
+                                            <td>@user.Email</td>
+                                            <td>@user.Roles</td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a asp-action="EditUser" asp-route-id="@user.Id"
+                                                       class="btn btn-sm btn-warning rounded-pill">
+                                                        <i class="bi bi-pencil-square"></i> Düzenle
+                                                    </a>
+                                                    <a asp-action="DeleteUser" asp-route-id="@user.Id"
+                                                       class="btn btn-sm btn-danger rounded-pill ms-1"
+                                                       onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">
+                                                        <i class="bi bi-trash3"></i> Sil
+                                                    </a>
+                                                    <a asp-action="ChangeRole" asp-route-id="@user.Id"
+                                                       class="btn btn-sm btn-info rounded-pill ms-1">
+                                                        <i class="bi bi-person-gear"></i> Rol Değiştir
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
-}
-
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Kullanıcı Adı</th>
-            <th>Email</th>
-            <th>Roller</th>
-            <th>İşlemler</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-                <tr>
-                    <td>@user.UserName</td>
-                    <td>@user.Email</td>
-                    <td>@user.Roles</td>
-                    <td>
-                        <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-sm btn-warning">Düzenle</a>
-                        <a asp-action="DeleteUser" asp-route-id="@user.Id" class="btn btn-sm btn-danger"
-                           onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">Sil</a>
-                        <a asp-action="ChangeRole" asp-route-id="@user.Id" class="btn btn-sm btn-info">Rol Değiştir</a>
-                    </td>
-                </tr>
-        }
-    </tbody>
-</table>
+    </div>
+</section>

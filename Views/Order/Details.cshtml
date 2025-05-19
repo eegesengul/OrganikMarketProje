@@ -1,39 +1,61 @@
 ﻿@model OrganikMarketProje.Models.Order
 
-<h2>Sipariş Detayı (#@Model.Id)</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
 
-<p><strong>Tarih:</strong> @Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
-<p><strong>Durum:</strong> @Model.Status</p>
-<p><strong>Adres:</strong> @Model.DeliveryAddress</p>
-<p><strong>Telefon:</strong> @Model.PhoneNumber</p>
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body bg-light p-4">
 
-@if (!string.IsNullOrEmpty(Model.Note))
-{
-        <p><strong>Not:</strong> @Model.Note</p>
-}
+                    <h2 class="text-danger mb-4">📦 Sipariş Detayı (#@Model.Id)</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Ürün</th>
-            <th>Birim Fiyat</th>
-            <th>Adet</th>
-            <th>Toplam</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.OrderItems)
-        {
-                <tr>
-                    <td>@item.Product?.Name</td>
-                    <td>@item.UnitPrice ₺</td>
-                    <td>@item.Quantity</td>
-                    <td>@(item.UnitPrice * item.Quantity) ₺</td>
-                </tr>
-        }
-    </tbody>
-</table>
+                    <p><strong class="text-dark">🗓️ Tarih:</strong> @Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
+                    <p><strong class="text-dark">🔄 Durum:</strong> @Model.Status</p>
+                    <p><strong class="text-dark">📍 Adres:</strong> @Model.DeliveryAddress</p>
+                    <p><strong class="text-dark">📞 Telefon:</strong> @Model.PhoneNumber</p>
 
-<p><strong>Genel Toplam:</strong> @Model.OrderItems.Sum(i => i.UnitPrice * i.Quantity) ₺</p>
+                    @if (!string.IsNullOrEmpty(Model.Note))
+                    {
+                            <p><strong class="text-dark">📝 Not:</strong> @Model.Note</p>
+                    }
 
-<a asp-action="Index" class="btn btn-secondary mt-3">← Siparişlerime Dön</a>
+                    <div class="table-responsive mt-4">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-warning text-center">
+                                <tr>
+                                    <th>🥗 Ürün</th>
+                                    <th>Birim Fiyat</th>
+                                    <th>Adet</th>
+                                    <th>Toplam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OrderItems)
+                                {
+                                        <tr>
+                                            <td>@item.Product?.Name</td>
+                                            <td>@item.UnitPrice ₺</td>
+                                            <td>@item.Quantity</td>
+                                            <td>@(item.UnitPrice * item.Quantity) ₺</td>
+                                        </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5 class="text-end text-danger mt-4">
+                        <strong>Genel Toplam:</strong> @Model.OrderItems.Sum(i => i.UnitPrice * i.Quantity) ₺
+                    </h5>
+
+                    <div class="text-start mt-4">
+                        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                            ← Siparişlerime Dön
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -1,41 +1,55 @@
 ﻿@model OrganikMarketProje.Models.EditUserViewModel
 
-<h2 class="text-center mb-4">Kullanıcı Düzenle</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body bg-light p-4">
 
-<partial name="_ValidationSummary" />
+                    <h2 class="text-center text-danger mb-4">👤 Kullanıcı Düzenle</h2>
 
-<form asp-action="EditUser" method="post">
-    <!-- Gizli alan olarak UserId ekliyoruz -->
-    <input type="hidden" asp-for="UserId" />
+                    <partial name="_ValidationSummary" />
 
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label">İsim</label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+                    <form asp-action="EditUser" method="post">
+                        <!-- Gizli alan -->
+                        <input type="hidden" asp-for="UserId" />
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Name" class="form-control" placeholder="İsim" />
+                            <label asp-for="Name">İsim</label>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Surname" class="form-control" placeholder="Soyisim" />
+                            <label asp-for="Surname">Soyisim</label>
+                            <span asp-validation-for="Surname" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası" />
+                            <label asp-for="PhoneNumber">Telefon Numarası</label>
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Email" class="form-control" type="email" placeholder="E-posta" />
+                            <label asp-for="Email">E-posta</label>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-warning btn-lg text-white rounded-pill">
+                                <i class="bi bi-check2-square me-2"></i> Güncelle
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Surname" class="form-label">Soyisim</label>
-        <input asp-for="Surname" class="form-control" />
-        <span asp-validation-for="Surname" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="PhoneNumber" class="form-label">Telefon Numarası</label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label">E-posta</label>
-        <input asp-for="Email" class="form-control" type="email" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary">Güncelle</button>
-    </div>
-</form>
+</section>
 
 @section Scripts {
     @Html.Partial("_ValidationScriptsPartial")

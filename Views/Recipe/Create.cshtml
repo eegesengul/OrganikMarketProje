@@ -4,36 +4,63 @@
     var products = ViewBag.Products as List<OrganikMarketProje.Models.Product>;
 }
 
-<h2>Yeni Tarif Ekle</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    <div>
-        <label>Başlık:</label>
-        <input asp-for="Title" class="form-control" />
-    </div>
-    <div>
-        <label>Hazırlama Süresi (Dakika):</label>
-        <input asp-for="DurationMinutes" type="number" class="form-control" />
-    </div>
-    <div>
-        <label>Hazırlanışı:</label>
-        <textarea asp-for="Instructions" class="form-control"></textarea>
-    </div>
-    <div>
-        <label>Tarif Resmi:</label>
-        <input type="file" name="image" />
-    </div>
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body bg-light p-4">
 
-    <h4>Malzemeler</h4>
-    @for (int i = 0; i < products.Count; i++)
-    {
-            <div class="border p-2 mb-2">
-                <input type="hidden" name="IngredientForms[@i].ProductId" value="@products[i].Id" />
-                <input type="checkbox" name="IngredientForms[@i].IsSelected" value="true" />
-            @products[i].Name
-                <input type="number" name="IngredientForms[@i].Quantity" placeholder="Miktar" min="0" class="ms-2" />
+                    <h2 class="text-danger text-center mb-4">👨‍🍳 Yeni Tarif Ekle</h2>
+
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Title" class="form-control" placeholder="Başlık" />
+                            <label asp-for="Title">Başlık</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="DurationMinutes" type="number" class="form-control" placeholder="Süre" />
+                            <label asp-for="DurationMinutes">Hazırlama Süresi (Dakika)</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Instructions" class="form-control" placeholder="Hazırlanışı" style="height: 120px;"></textarea>
+                            <label asp-for="Instructions">Hazırlanışı</label>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Tarif Resmi</label>
+                            <input type="file" name="image" class="form-control" />
+                        </div>
+
+                        <h4 class="text-warning mb-3">🍅 Malzemeler</h4>
+
+                        @for (int i = 0; i < products.Count; i++)
+                        {
+                                <div class="border rounded p-3 mb-2 bg-white shadow-sm">
+                                    <input type="hidden" name="IngredientForms[@i].ProductId" value="@products[i].Id" />
+
+                                    <div class="form-check d-flex align-items-center gap-3">
+                                        <input type="checkbox" class="form-check-input" name="IngredientForms[@i].IsSelected" value="true" id="chk-@i" />
+                                        <label class="form-check-label fw-semibold" for="chk-@i">@products[i].Name</label>
+                                        <input type="number" name="IngredientForms[@i].Quantity"
+                                               class="form-control form-control-sm ms-auto text-end"
+                                               placeholder="Miktar" min="0" style="width: 100px;" />
+                                    </div>
+                                </div>
+                        }
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill">
+                                <i class="bi bi-check-circle me-2"></i> Kaydet
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-    }
 
-    <button type="submit" class="btn btn-success">Kaydet</button>
-</form>
+        </div>
+    </div>
+</section>

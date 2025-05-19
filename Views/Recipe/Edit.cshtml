@@ -1,75 +1,102 @@
 ﻿@model OrganikMarketProje.Models.Recipe
 
-<h2>Tarifi Düzenle</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8">
 
-<partial name="_ValidationSummary" />
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body bg-light p-4">
 
-<form asp-action="Edit" method="post" enctype="multipart/form-data">
-    <input type="hidden" asp-for="Id" />
+                    <h2 class="text-warning text-center mb-4">✏️ Tarifi Düzenle</h2>
 
-    <div class="mb-3">
-        <label asp-for="Title"></label>
-        <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+                    <partial name="_ValidationSummary" />
+
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Title" class="form-control" placeholder="Başlık" />
+                            <label asp-for="Title">Başlık</label>
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Instructions" class="form-control" placeholder="Hazırlanışı" style="height: 120px;"></textarea>
+                            <label asp-for="Instructions">Hazırlanışı</label>
+                            <span asp-validation-for="Instructions" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="DurationMinutes" type="number" class="form-control" placeholder="Süre" />
+                            <label asp-for="DurationMinutes">Hazırlama Süresi (Dakika)</label>
+                            <span asp-validation-for="DurationMinutes" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Mevcut Resim</label><br />
+                            @if (Model.ImageData != null)
+                            {
+                                    <img src="data:@Model.ImageType;base64,@Convert.ToBase64String(Model.ImageData)"
+                                         class="img-fluid rounded shadow-sm" style="max-width: 200px;" />
+                            }
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Yeni Resim Yükle (isteğe bağlı)</label>
+                            <input type="file" name="image" class="form-control" />
+                        </div>
+
+                        <h4 class="text-danger mb-3">🥕 Malzemeler</h4>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle">
+                                <thead class="table-warning text-center">
+                                    <tr>
+                                        <th>Seç</th>
+                                        <th>Ürün</th>
+                                        <th>Miktar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (ViewBag.Products != null)
+                                    {
+                                        var products = ViewBag.Products as List<OrganikMarketProje.Models.Product>;
+                                        for (int i = 0; i < products.Count; i++)
+                                        {
+                                            var product = products[i];
+                                            var existingIngredient = Model.Ingredients?.FirstOrDefault(x => x.ProductId == product.Id);
+                                                    <tr>
+                                                        <td class="text-center">
+                                                            <input type="checkbox" name="IngredientForms[@i].IsSelected" value="true" @(existingIngredient != null ? "checked" : "") />
+                                                            <input type="hidden" name="IngredientForms[@i].ProductId" value="@product.Id" />
+                                                        </td>
+                                                        <td>@product.Name</td>
+                                                        <td>
+                                                            <input type="number" name="IngredientForms[@i].Quantity"
+                                                                   value="@(existingIngredient != null ? existingIngredient.Quantity : 0)"
+                                                                   min="0" class="form-control form-control-sm text-end" style="width: 100px;" />
+                                                        </td>
+                                                    </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-success rounded-pill px-4">
+                                <i class="bi bi-check-circle"></i> Kaydet
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                                İptal
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Instructions"></label>
-        <textarea asp-for="Instructions" class="form-control"></textarea>
-        <span asp-validation-for="Instructions" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="DurationMinutes"></label>
-        <input asp-for="DurationMinutes" type="number" class="form-control" />
-        <span asp-validation-for="DurationMinutes" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label>Mevcut Resim:</label><br />
-        @if (Model.ImageData != null)
-        {
-                <img src="data:@Model.ImageType;base64,@Convert.ToBase64String(Model.ImageData)" style="width: 200px; height: auto;" />
-        }
-    </div>
-
-    <div class="mb-3">
-        <label>Yeni Resim Yükle (isteğe bağlı):</label>
-        <input type="file" name="image" class="form-control" />
-    </div>
-
-    <h4>Malzemeler</h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Seç</th>
-                <th>Ürün</th>
-                <th>Miktar</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (ViewBag.Products != null)
-            {
-                var products = ViewBag.Products as List<OrganikMarketProje.Models.Product>;
-                for (int i = 0; i < products.Count; i++)
-                {
-                    var product = products[i];
-                    var existingIngredient = Model.Ingredients?.FirstOrDefault(x => x.ProductId == product.Id);
-                            <tr>
-                                <td>
-                                    <input type="checkbox" name="IngredientForms[@i].IsSelected" value="true" @(existingIngredient != null ? "checked" : "") />
-                                    <input type="hidden" name="IngredientForms[@i].ProductId" value="@product.Id" />
-                                </td>
-                                <td>@product.Name</td>
-                                <td>
-                                    <input type="number" name="IngredientForms[@i].Quantity" value="@(existingIngredient != null ? existingIngredient.Quantity : 0)" min="0" class="form-control form-control-sm" style="width: 80px;" />
-                                </td>
-                            </tr>
-                }
-            }
-        </tbody>
-    </table>
-
-    <button type="submit" class="btn btn-success">Kaydet</button>
-    <a asp-action="Index" class="btn btn-secondary">İptal</a>
-</form>
+</section>

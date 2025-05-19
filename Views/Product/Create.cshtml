@@ -1,37 +1,62 @@
 ﻿@model OrganikMarketProje.Models.Product
 
-<h2>Yeni Ürün Ekle</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
 
-<partial name="_ValidationSummary" />
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body bg-light p-4">
 
-<form asp-action="Create" method="post" enctype="multipart/form-data">
-    <div class="mb-3">
-        <label>Ad:</label>
-        <input asp-for="Name" class="form-control" required />
+                    <h2 class="text-danger text-center mb-4">🛒 Yeni Ürün Ekle</h2>
+
+                    <partial name="_ValidationSummary" />
+
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div class="form-floating mb-3">
+                            <input asp-for="Name" class="form-control" placeholder="Ad" required />
+                            <label asp-for="Name">Ad</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <textarea asp-for="Description" class="form-control" placeholder="Açıklama" style="height: 100px;" required></textarea>
+                            <label asp-for="Description">Açıklama</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="Fiyat" required />
+                            <label asp-for="Price">Fiyat (₺)</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="StockQuantity" type="number" class="form-control" placeholder="Stok" required />
+                            <label asp-for="StockQuantity">Stok Adedi</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Category" class="form-control" placeholder="Kategori" required />
+                            <label asp-for="Category">Kategori</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="DeliveryInfo" class="form-control" placeholder="Teslimat Bilgisi" required />
+                            <label asp-for="DeliveryInfo">Teslimat Bilgisi</label>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Ürün Görseli</label>
+                            <input type="file" name="image" class="form-control" />
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill">
+                                <i class="bi bi-check-circle me-2"></i> Kaydet
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div class="mb-3">
-        <label>Açıklama:</label>
-        <textarea asp-for="Description" class="form-control" required></textarea>
-    </div>
-    <div class="mb-3">
-        <label>Fiyat:</label>
-        <input asp-for="Price" type="number" step="0.01" class="form-control" required />
-    </div>
-    <div class="mb-3">
-        <label>Stok Adedi:</label>
-        <input asp-for="StockQuantity" type="number" class="form-control" required />
-    </div>
-    <div class="mb-3">
-        <label>Kategori:</label>
-        <input asp-for="Category" class="form-control" required />
-    </div>
-    <div class="mb-3">
-        <label>Teslimat Bilgisi:</label>
-        <input asp-for="DeliveryInfo" class="form-control" required />
-    </div>
-    <div class="mb-3">
-        <label>Resim:</label>
-        <input type="file" name="image" class="form-control" />
-    </div>
-    <button type="submit" class="btn btn-primary">Kaydet</button>
-</form>
+</section>

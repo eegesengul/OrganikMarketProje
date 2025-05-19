@@ -1,66 +1,86 @@
 ﻿@model OrganikMarketProje.Models.ProfileViewModel
 
-<h2 class="text-center mb-4">Profilim</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
 
-@if (TempData["ProfileMessage"] != null)
-{
-        <div class="alert alert-success">@TempData["ProfileMessage"]</div>
-}
+            <div class="card shadow rounded-4 border-0 mb-5">
+                <div class="card-body p-4 bg-light">
+                    <h2 class="text-center text-danger mb-4">👤 Profilim</h2>
 
-<partial name="_ValidationSummary" />
+                    @if (TempData["ProfileMessage"] != null)
+                    {
+                            <div class="alert alert-success">@TempData["ProfileMessage"]</div>
+                    }
 
-<!-- PROFİL BİLGİLERİ GÜNCELLEME FORMU -->
-<form asp-action="MyProfile" method="post">
-    <input type="hidden" name="FormType" value="Profile" />
+                    <partial name="_ValidationSummary" />
 
-    <div class="mb-3">
-        <label asp-for="Name" class="form-label">Ad Soyad</label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+                    <form asp-action="MyProfile" method="post">
+                        <input type="hidden" name="FormType" value="Profile" />
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Name" class="form-control" placeholder="Ad Soyad" />
+                            <label asp-for="Name">Ad Soyad</label>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Surname" class="form-control" placeholder="Soyad" />
+                            <label asp-for="Surname">Soyad</label>
+                            <span asp-validation-for="Surname" class="text-danger small"></span>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <input asp-for="Email" class="form-control" placeholder="E-posta" />
+                            <label asp-for="Email">E-posta</label>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger btn-lg rounded-pill">
+                                <i class="bi bi-save me-2"></i> Bilgileri Güncelle
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body p-4 bg-light">
+                    <h4 class="text-warning mb-3">🔑 Şifre Değiştir</h4>
+                    <p class="mb-4">Mevcut şifrenizi girerek yeni şifrenizi belirleyin.</p>
+
+                    <form asp-action="MyProfile" method="post">
+                        <input type="hidden" name="FormType" value="Password" />
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="CurrentPassword" type="password" class="form-control" placeholder="Mevcut Şifre" />
+                            <label asp-for="CurrentPassword">Mevcut Şifre</label>
+                            <span asp-validation-for="CurrentPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="NewPassword" type="password" class="form-control" placeholder="Yeni Şifre" />
+                            <label asp-for="NewPassword">Yeni Şifre</label>
+                            <span asp-validation-for="NewPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="ConfirmNewPassword" type="password" class="form-control" placeholder="Yeni Şifre Tekrar" />
+                            <label asp-for="ConfirmNewPassword">Yeni Şifreyi Tekrar Girin</label>
+                            <span asp-validation-for="ConfirmNewPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-outline-danger btn-lg rounded-pill">
+                                <i class="bi bi-shield-lock me-2"></i> Şifreyi Güncelle
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div class="mb-3">
-        <label asp-for="Surname" class="form-label">Soyad</label>
-        <input asp-for="Surname" class="form-control" />
-        <span asp-validation-for="Surname" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="Email" class="form-label">E-posta</label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Profil Bilgilerini Güncelle</button>
-</form>
-
-<hr />
-
-<h5>Şifre Değiştir (Opsiyonel)</h5>
-<p>Eğer şifrenizi değiştirmek istiyorsanız, mevcut şifrenizi girin ve yeni şifrenizi belirleyin.</p>
-
-<!-- ŞİFRE GÜNCELLEME FORMU -->
-<form asp-action="MyProfile" method="post">
-    <input type="hidden" name="FormType" value="Password" />
-
-    <div class="mb-3">
-        <label asp-for="CurrentPassword" class="form-label">Mevcut Şifre</label>
-        <input asp-for="CurrentPassword" class="form-control" type="password" />
-        <span asp-validation-for="CurrentPassword" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="NewPassword" class="form-label">Yeni Şifre</label>
-        <input asp-for="NewPassword" class="form-control" type="password" />
-        <span asp-validation-for="NewPassword" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="ConfirmNewPassword" class="form-label">Yeni Şifreyi Tekrar Girin</label>
-        <input asp-for="ConfirmNewPassword" class="form-control" type="password" />
-        <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-danger">Şifreyi Güncelle</button>
-</form>
+</section>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

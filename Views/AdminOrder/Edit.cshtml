@@ -1,17 +1,36 @@
 ﻿@model OrganikMarketProje.Models.Order
 
-<h2>Sipariş Durumunu Güncelle (#@Model.Id)</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body p-4 bg-light">
+                    <h2 class="text-danger text-center mb-4">🔄 Sipariş Durumunu Güncelle (#@Model.Id)</h2>
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" name="id" value="@Model.Id" />
-    <div class="form-group">
-        <label>Durum</label>
-        <select name="status" class="form-control">
-            <option value="Hazırlanıyor" selected="@("Hazırlanıyor" == Model.Status)">Hazırlanıyor</option>
-            <option value="Kargoda" selected="@("Kargoda" == Model.Status)">Kargoda</option>
-            <option value="Teslim Edildi" selected="@("Teslim Edildi" == Model.Status)">Teslim Edildi</option>
-        </select>
+                    <form asp-action="Edit" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+
+                        <div class="form-floating mb-4">
+                            <select name="status" class="form-select">
+                                <option value="Hazırlanıyor" selected="@("Hazırlanıyor" == Model.Status)">Hazırlanıyor</option>
+                                <option value="Kargoda" selected="@("Kargoda" == Model.Status)">Kargoda</option>
+                                <option value="Teslim Edildi" selected="@("Teslim Edildi" == Model.Status)">Teslim Edildi</option>
+                            </select>
+                            <label>Durum</label>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-success rounded-pill px-4">
+                                <i class="bi bi-check2-circle me-2"></i> Güncelle
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">
+                                ← Geri
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-success mt-3">Güncelle</button>
-    <a asp-action="Index" class="btn btn-secondary mt-3">Geri</a>
-</form>
+</section>

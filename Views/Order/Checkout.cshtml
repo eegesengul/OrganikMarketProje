@@ -1,29 +1,48 @@
 ﻿@model OrganikMarketProje.Models.OrderViewModel
 
-<h2 class="text-center mb-4">Siparişi Tamamla</h2>
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
 
-<partial name="_ValidationSummary" />
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-body bg-light p-4">
 
-<form asp-action="Checkout" method="post">
-    <div class="form-group">
-        <label asp-for="DeliveryAddress">Teslimat Adresi</label>
-        <input asp-for="DeliveryAddress" class="form-control" />
-        <span asp-validation-for="DeliveryAddress" class="text-danger"></span>
+                    <h2 class="text-center text-danger mb-4">🧾 Siparişi Tamamla</h2>
+
+                    <partial name="_ValidationSummary" />
+
+                    <form asp-action="Checkout" method="post">
+                        <div class="form-floating mb-3">
+                            <input asp-for="DeliveryAddress" class="form-control" placeholder="Teslimat Adresi" />
+                            <label asp-for="DeliveryAddress">Teslimat Adresi</label>
+                            <span asp-validation-for="DeliveryAddress" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="Telefon Numarası" />
+                            <label asp-for="PhoneNumber">Telefon Numarası</label>
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Note" class="form-control" placeholder="Sipariş Notu" style="height: 120px;"></textarea>
+                            <label asp-for="Note">Sipariş Notu (isteğe bağlı)</label>
+                            <span asp-validation-for="Note" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill">
+                                <i class="bi bi-bag-check-fill me-2"></i> Siparişi Tamamla
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="PhoneNumber">Telefon Numarası</label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Note">Sipariş Notu (isteğe bağlı)</label>
-        <textarea asp-for="Note" class="form-control"></textarea>
-        <span asp-validation-for="Note" class="text-danger"></span>
-    </div>
-    <div class="text-center">
-        <button type="submit" class="btn btn-success">Siparişi Tamamla</button>
-    </div>
-</form>
+</section>
 
 @section Scripts {
     @{

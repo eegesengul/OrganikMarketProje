@@ -15,7 +15,7 @@ namespace OrganikMarketProje.Models
         public string Surname { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Telefon numarası zorunludur.")]
-        [RegularExpression(@"^\d{10,15}$", ErrorMessage = "Telefon numarası yalnızca rakamlardan oluşmalı ve 10-15 hane arası olmalıdır.")]
+        [RegularExpression(@"^\d{10,12}$", ErrorMessage = "Telefon numarası yalnızca rakamlardan oluşmalı ve 10-12 hane arası olmalıdır.")]
         public string PhoneNumber { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Email adresi zorunludur.")]

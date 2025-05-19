@@ -1,31 +1,55 @@
 ﻿@model OrganikMarketProje.Models.Admin.AdminReportViewModel
 
-<h2>Admin Raporları</h2>
+<section class="container py-5">
+    <div class="row">
+        <div class="col-12">
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="alert alert-info">Toplam Kullanıcı Sayısı: <strong>@Model.TotalUsers</strong></div>
-    </div>
-    <div class="col-md-4">
-        <div class="alert alert-success">Toplam Sipariş Sayısı: <strong>@Model.TotalOrders</strong></div>
-    </div>
-</div>
+            <div class="card shadow rounded-4 border-0 mb-4">
+                <div class="card-body bg-light p-4">
 
-<h3>En Çok Sipariş Edilen Ürünler</h3>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Ürün</th>
-            <th>Toplam Adet</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.TopProducts)
-        {
-                <tr>
-                    <td>@item.ProductName</td>
-                    <td>@item.TotalQuantity</td>
-                </tr>
-        }
-    </tbody>
-</table>
+                    <h2 class="text-danger mb-4">📈 Admin Raporları</h2>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="alert alert-info d-flex align-items-center">
+                                <i class="bi bi-people-fill me-2"></i>
+                                Toplam Kullanıcı Sayısı:
+                                <strong class="ms-2">@Model.TotalUsers</strong>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-success d-flex align-items-center">
+                                <i class="bi bi-basket-fill me-2"></i>
+                                Toplam Sipariş Sayısı:
+                                <strong class="ms-2">@Model.TotalOrders</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="text-warning mb-3">🥇 En Çok Sipariş Edilen Ürünler</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ürün</th>
+                                    <th>Toplam Adet</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.TopProducts)
+                                {
+                                        <tr>
+                                            <td>@item.ProductName</td>
+                                            <td>@item.TotalQuantity</td>
+                                        </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

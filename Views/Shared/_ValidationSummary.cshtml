@@ -1,7 +1,8 @@
 ﻿@if (!ViewData.ModelState.IsValid)
 {
-        <div class="alert alert-danger">
-            <ul>
+        <div class="alert alert-danger border-start border-4 border-danger ps-3">
+            <h6 class="fw-bold mb-2">⚠️ Lütfen aşağıdaki hataları düzeltin:</h6>
+            <ul class="mb-0">
             @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
             {
                         <li>@error.ErrorMessage</li>

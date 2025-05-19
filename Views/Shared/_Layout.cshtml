@@ -10,48 +10,51 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm sticky-top">
             <div class="container-fluid">
-                <a class="navbar-brand fw-bold fs-4" asp-controller="Home" asp-action="Index">OrganikMarketProje</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand fw-bold fs-4 text-white" asp-controller="Home" asp-action="Index">
+                    🍅 OrganikMarketProje
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+                        aria-controls="mainNavbar" aria-expanded="false" aria-label="Menüyü Aç">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="mainNavbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Product" asp-action="Index">Ürünler</a>
+                            <a class="nav-link text-white" asp-controller="Product" asp-action="Index">Ürünler</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Recipe" asp-action="Index">Tarifler</a>
+                            <a class="nav-link text-white" asp-controller="Recipe" asp-action="Index">Tarifler</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">Sepet</a>
+                            <a class="nav-link text-white" asp-controller="Cart" asp-action="Index">Sepet</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Order" asp-action="Index">Siparişlerim</a>
+                            <a class="nav-link text-white" asp-controller="Order" asp-action="Index">Siparişlerim</a>
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Favorite" asp-action="MyFavorites">Favorilerim</a>
+                                    <a class="nav-link text-white" asp-controller="Favorite" asp-action="MyFavorites">Favorilerim</a>
                                 </li>
                         }
                     </ul>
 
-                    <!-- Arama Kutusu Sadece İlgili Sayfalarda -->
+                    <!-- Arama -->
                     @if (ViewBag.ShowProductSearch == true)
                     {
                             <form class="d-flex me-3" asp-controller="Product" asp-action="Search" method="get">
-                                <input class="form-control me-2" type="search" name="query" placeholder="Ürün ara..." />
-                                <button class="btn btn-outline-success" type="submit">Ara</button>
+                                <input class="form-control form-control-sm me-2" type="search" name="query" placeholder="Ürün ara..." />
+                                <button class="btn btn-outline-light btn-sm" type="submit">Ara</button>
                             </form>
                     }
                     else if (ViewBag.ShowRecipeSearch == true)
                     {
                             <form class="d-flex me-3" asp-controller="Recipe" asp-action="Search" method="get">
-                                <input class="form-control me-2" type="search" name="query" placeholder="Tarif ara..." />
-                                <button class="btn btn-outline-primary" type="submit">Ara</button>
+                                <input class="form-control form-control-sm me-2" type="search" name="query" placeholder="Tarif ara..." />
+                                <button class="btn btn-outline-light btn-sm" type="submit">Ara</button>
                             </form>
                     }
 
@@ -59,13 +62,15 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Account" asp-action="MyProfile">Profilim</a>
+                                    <a class="nav-link text-white" asp-controller="Account" asp-action="MyProfile">Profilim</a>
                                 </li>
+
                             @if (User.IsInRole("Admin"))
                             {
                                         <li class="nav-item dropdown">
-                                            <a class="nav-link dropdown-toggle text-danger fw-bold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Admin Paneli
+                                            <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="adminDropdown"
+                                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                ⚙️ Admin Paneli
                                             </a>
                                             <ul class="dropdown-menu dropdown-menu-end">
                                                 <li><a class="dropdown-item" asp-controller="AdminOrder" asp-action="Index">Sipariş Yönetimi</a></li>
@@ -76,22 +81,23 @@
                                             </ul>
                                         </li>
                             }
-                                <li class="nav-item">
-                                    <span class="nav-link text-success">@User.Identity.Name</span>
+
+                                <li class="nav-item d-flex align-items-center">
+                                    <span class="nav-link text-warning fw-semibold">@User.Identity.Name</span>
                                 </li>
                                 <li class="nav-item">
                                     <form asp-action="Logout" asp-controller="Account" method="post" class="d-inline">
-                                        <button type="submit" class="btn btn-danger btn-sm">Çıkış Yap</button>
+                                        <button type="submit" class="btn btn-outline-light btn-sm">Çıkış Yap</button>
                                     </form>
                                 </li>
                         }
                         else
                         {
                                 <li class="nav-item">
-                                    <a class="btn btn-success btn-sm me-2" asp-action="Login" asp-controller="Account">Giriş Yap</a>
+                                    <a class="btn btn-outline-light btn-sm me-2" asp-action="Login" asp-controller="Account">Giriş Yap</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="btn btn-primary btn-sm" asp-action="Register" asp-controller="Account">Kayıt Ol</a>
+                                    <a class="btn btn-light btn-sm" asp-action="Register" asp-controller="Account">Kayıt Ol</a>
                                 </li>
                         }
                     </ul>
@@ -100,15 +106,15 @@
         </nav>
     </header>
 
-    <div class="container">
+    <div class="container mt-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted mt-4">
-        <div class="container text-center">
-            &copy; 2025 - Organik Market Projesi
+    <footer class="border-top mt-5 py-3 bg-light text-center text-muted small">
+        <div class="container">
+            &copy; 2025 - Organik Market Projesi. Tüm hakları saklıdır.
         </div>
     </footer>
 
