@@ -85,6 +85,7 @@ namespace OrganikMarketProje.Controllers
         {
             if (!ModelState.IsValid)
                 return View(product);
+//BYTE DONUSTURME MEMORYSTREAM
 
             if (image != null)
             {
